@@ -103,13 +103,13 @@ namespace Ceto
 
         public OverlayManager( Material mat)
 		{
-
+            //OYM:  默认高度与浮沫都是加法运算
             HeightOverlayBlendMode = OVERLAY_BLEND_MODE.ADD;
             FoamOverlayBlendMode = OVERLAY_BLEND_MODE.ADD;
 
             MaxDisplacement = 1.0f;
-
-			m_overlayMat = mat;
+            //OYM:  
+            m_overlayMat = mat;
 			m_waveOverlays = new LinkedList<WaveOverlay>();
 			m_queryableOverlays = new List<WaveOverlay>(32);
             m_removeOverlays = new List<WaveOverlay>(32);
@@ -122,23 +122,23 @@ namespace Ceto
 
             //Just need a texture to represent a 'blank' normal when overlay normal tex is null.
             //Only needs to be 1 pixel but PS4 has minimum texture size of 4x4.
-            m_blankNormal = new Texture2D(4, 4, TextureFormat.ARGB32, false, true);
-            m_blankNormal.hideFlags = HideFlags.HideAndDontSave;
-            m_blankNormal.name = "Ceto Blank Normal Texture";
+            m_blankNormal = new Texture2D(4, 4, TextureFormat.ARGB32, false, true);//OYM:  创建一个4x4的空照片表示空白区域
+            m_blankNormal.hideFlags = HideFlags.HideAndDontSave;//OYM:  隐藏并且不显示
+            m_blankNormal.name = "Ceto Blank Normal Texture";//OYM:  命名
 
             for (int x = 0; x < 4; x++)
             {
                 for (int y = 0; y < 4; y++)
                 {
-                    m_blankNormal.SetPixel(x, y, new Color(0.5f, 0.5f, 1.0f, 0.5f));
+                    m_blankNormal.SetPixel(x, y, new Color(0.5f, 0.5f, 1.0f, 0.5f));//OYM:  给这个4x4的空照片设置颜色
                 }
             }
 
             m_blankNormal.Apply();
 
-            m_clearColor = new Color(0, 0, 0, 0);
+            m_clearColor = new Color(0, 0, 0, 0);//OYM:  空颜色
 
-            m_planes = new Plane[6];
+            m_planes = new Plane[6];//OYM:  蛤?
 
         }
 

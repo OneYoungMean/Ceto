@@ -22,11 +22,11 @@ namespace Ceto
 	[DisallowMultipleComponent]
     public class Ocean : MonoBehaviour, ICoroutine
     {
-
 		/// <summary>
 		/// These are used to disable certain feature for debugging.
 		/// If your not having problems dont touch these.
 		/// </summary>
+        //用于debug
 		public static readonly bool DISABLE_FOURIER_MULTITHREADING = false;
 		public static readonly bool DISABLE_PROJECTED_GRID_BORDER = false;
 		public static bool DISABLE_ALL_MULTITHREADING = false;
@@ -37,6 +37,7 @@ namespace Ceto
         /// Current version. Should match the version number
         /// in the Version.txt file. Dont change this.
         /// </summary>
+        //版本
         public static readonly string VERSION = "1.1.4";
 
         /// <summary>
@@ -48,12 +49,12 @@ namespace Ceto
         /// a error and shut them self down. 
         /// </summary>
 		public static Ocean Instance { get; private set; }
-
+        //OYM:  单例?
         /// <summary>
         /// The default layer for the ocean. 
         /// </summary>
         public static string OCEAN_LAYER = "Water";
-
+        //OYM:  默认的layer
         /// <summary>
         /// Texture names used by Ceto.
         /// </summary>
@@ -66,7 +67,7 @@ namespace Ceto
         public static readonly string OCEAN_MASK_TEXTURE_NAME0 = "Ceto_OceanMask0";
         public static readonly string OCEAN_MASK_TEXTURE_NAME1 = "Ceto_OceanMask1";
         public static readonly string NORMAL_FADE_TEXTURE_NAME = "Ceto_NormalFade";
-
+        //OYM:  材质名字
         /// <summary>
         /// The max wave height from the spectrum.
         /// This is just based from observation of the 
@@ -83,185 +84,187 @@ namespace Ceto
 		/// The max possible wave height.
 		/// </summary>
 		public static float MAX_WAVE_HEIGHT { get { return MAX_SPECTRUM_WAVE_HEIGHT + MAX_OVERLAY_WAVE_HEIGHT; } }
-
-		/// <summary>
-		/// Disable warnings/info from being printed.
-		/// </summary>
-		public bool disableWarnings = false;
+        //OYM:  最大波浪高度
+        /// <summary>
+        /// Disable warnings/info from being printed.
+        /// </summary>
+        public bool disableWarnings = false;
         public bool disableInfo = false;
-
+        //OYM:  测试用
         /// <summary>
         /// Should the projection use double precision math.
         /// </summary>
         public bool doublePrecisionProjection = true;
-
+        //OYM:  采用双精度函数
         /// <summary>
         /// Set the projector close to the camera for better resolutions.
         /// May need to disable this for some set ups with a large
         /// degree of freedom of the camera like VR.
         /// </summary>
         public bool tightProjectionFit = true;
-
+        //OYM:  紧密的投影
         /// <summary>
         /// If a gameobject with a directional light is
         /// bound here the lights direction and color is 
         /// used for certain features like subsurface scatter.
         /// </summary>
 		public GameObject m_sun;
-
+        //OYM:  日
         /// <summary>
         /// The ocean level. 
         /// </summary>
         public float level = 0.0f;
-
+        //OYM:  这个....层次?
         /// <summary>
         /// The size compared to the screen size of the overlay height map.
         /// R - height.
         /// G - mask.
         /// </summary>
-		public OVERLAY_MAP_SIZE heightOverlaySize = OVERLAY_MAP_SIZE.HALF;
-
+        public OVERLAY_MAP_SIZE heightOverlaySize = OVERLAY_MAP_SIZE.HALF;
+        //OYM:  高度覆盖大小 ,上面的注释说明了覆盖的原理
         /// <summary>
         /// The size compared to the screen size of the overlay normal map.
         /// RGB - world space normal.
         /// A - mask.
         /// </summary>
 		public OVERLAY_MAP_SIZE normalOverlaySize = OVERLAY_MAP_SIZE.FULL;
-
-		/// <summary>
-		/// The size compared to the screen size of the overlay foam map.
-		/// R - foam.
-		/// GB - empty.
-		/// A - mask.
-		public OVERLAY_MAP_SIZE foamOverlaySize = OVERLAY_MAP_SIZE.FULL;
-
-		/// <summary>
-		/// The size compared to the screen size of the overlay clip map.
-		/// R - clip.
-		public OVERLAY_MAP_SIZE clipOverlaySize = OVERLAY_MAP_SIZE.HALF;
-
+        //OYM:  法线覆盖大小,上面的注释说明了原理
+        /// <summary>
+        /// The size compared to the screen size of the overlay foam map.
+        /// R - foam.
+        /// GB - empty.
+        /// A - mask.
+        public OVERLAY_MAP_SIZE foamOverlaySize = OVERLAY_MAP_SIZE.FULL;
+        //OYM:  浮沫
+        /// <summary>
+        /// The size compared to the screen size of the overlay clip map.
+        /// R - clip.
+        public OVERLAY_MAP_SIZE clipOverlaySize = OVERLAY_MAP_SIZE.HALF;
+        //OYM:  蛤?
         /// <summary>
         /// The mode used to blend the overlays when they are rendered into the buffer.
         /// </summary>
         public OVERLAY_BLEND_MODE heightBlendMode = OVERLAY_BLEND_MODE.ADD;
-
+        //OYM:  高度混合模式
         /// <summary>
         /// The mode used to blend the overlays when they are rendered into the buffer.
         /// </summary>
         public OVERLAY_BLEND_MODE foamBlendMode = OVERLAY_BLEND_MODE.ADD;
-
+        //OYM:  浮沫混合模式
         /// <summary>
         /// If no reflection component is added this is the default reflection color.
         /// </summary>
 		public Color defaultSkyColor = new Color32(96, 147, 210, 255);
-
+        //OYM:  默认天空的颜色
         /// <summary>
         /// If no underwater component is added this is the default water color.
         /// If a underwater component is added this is the inscatter color.
         /// </summary>
 		public Color defaultOceanColor = new Color32(0, 19, 30, 255);
-		
-		/// <summary>
-		/// The wind direction.
-		/// </summary>
-		[Range(0.0f, 360.0f)]
+        //OYM:  默认海洋颜色
+        /// <summary>
+        /// The wind direction.
+        /// </summary>
+        [Range(0.0f, 360.0f)]
 		public float windDir = 0.0f;
-		public Vector3 WindDirVector { get; private set; }
-
+        //OYM:  风力朝向
+        public Vector3 WindDirVector { get; private set; }
+        //OYM:  风力
+        //OYM:  下面三个都是跟海面的散射有关
         /// <summary>
         /// The roughness for the BRDF Lighting.
         /// </summary>
 		[Range(0.0f, 1.0f)]
 		public float specularRoughness = 0.2f;
-
-		/// <summary>
-		/// The roughness for the BRDF Lighting.
-		/// </summary>
-		[Range(0.0f, 1.0f)]
+        //OYM:  镜面粗糙程度
+        /// <summary>
+        /// The roughness for the BRDF Lighting.
+        /// </summary>
+        [Range(0.0f, 1.0f)]
 		public float specularIntensity = 0.2f;
-
+        //OYM:  镜面强度
         /// <summary>
         /// The power for the fresnel.
         /// </summary>
 		[Range(0.0f, 10.0f)]
 		public float fresnelPower = 5.0f;
-
-		/// <summary>
-		/// The minimum fresnel.
-		/// </summary>
-		[Range(0.0f, 1.0f)]
+        //OYM:  菲涅尔程度
+        /// <summary>
+        /// The minimum fresnel.
+        /// </summary>
+        [Range(0.0f, 1.0f)]
 		public float minFresnel = 0.02f;
-
+        //OYM:  最低的菲涅尔
         /// <summary>
         /// The foam Tint. 
         /// </summary>
         public Color foamTint = Color.white;
-
+        //OYM:  浮沫颜色
         /// <summary>
         /// The foam intensity
         /// </summary>
         [Range(0.0f, 3.0f)]
         public float foamIntensity = 1.0f;
-
+        //OYM:  浮沫强度
         /// <summary>
         /// The foam texture. 
         /// Adds the detail to the foam from the overlays and spectrum.
         /// </summary>
         public FoamTexture foamTexture0;
-
+        //OYM:  浮沫贴图
         /// <summary>
         /// The foam texture.
         /// Adds the detail to the foam from the overlays and spectrum.
         /// </summary>
         public FoamTexture foamTexture1;
-
+        //OYM:  浮沫贴图2
         /// <summary>
         /// The shader used to render the overlays.
         /// </summary>
-		[HideInInspector]
+		//[HideInInspector]
 		public Shader waveOverlaySdr;
-
+        //OYM:  覆盖用的shader
         /// <summary>
         /// The component used to manage the ocean grid.
         /// </summary>
 		public ProjectedGrid Grid { get; set; }
-		
+        //OYM:  管理海洋区块的网格
         /// <summary>
         /// The component used to manage the reflections.
         /// </summary>
-		public PlanarReflection Reflection { get; set; }
-		
+        public PlanarReflection Reflection { get; set; }
+        //OYM:  平面反射?
         /// <summary>
         /// The component used to manage the wave generation.
         /// </summary>
-		public WaveSpectrum Spectrum { get; set; }
-		
+        public WaveSpectrum Spectrum { get; set; }
+        //OYM:  波浪的生成管理
         /// <summary>
         /// The component used to manage the under water effects.
         /// </summary>
-		public UnderWater UnderWater { get; set; }
-
+        public UnderWater UnderWater { get; set; }
+        //OYM:  水下
         /// <summary>
         /// The time value used to generate the waves from.
         /// </summary>
 		public IOceanTime OceanTime { get; set; }
-
-		/// <summary>
-		/// The projection used for the projected grid and the overlays.
-		/// </summary>
-		public IProjection Projection { get; private set; }
-
+        //OYM:  时间
+        /// <summary>
+        /// The projection used for the projected grid and the overlays.
+        /// </summary>
+        public IProjection Projection { get; private set; }
+        //OYM:  用于投影网格和叠加层的投影
         /// <summary>
         /// Used to offset the position of the ocean.
         /// </summary>
-        Vector3 m_positionOffset;
+        Vector3 m_positionOffset;//OYM:  偏移
         public Vector3 PositionOffset
         {
             get { return m_positionOffset; }
             set
             {
                 m_positionOffset = value;
-                Shader.SetGlobalVector("Ceto_PosOffset", m_positionOffset);
+                Shader.SetGlobalVector("Ceto_PosOffset", m_positionOffset);//OYM:  设置的时候会顺便给Shader设置下
             }
         }
 
@@ -269,41 +272,41 @@ namespace Ceto
         /// Hold the data generated for each camera that renders the ocean.
         /// </summary>
 		Dictionary<Camera, CameraData> m_cameraData = new Dictionary<Camera, CameraData>();
-
+        //OYM:  摄像头的数据?
         /// <summary>
         /// The number of cameras rendering the ocean.
         /// </summary>
         public int CameraCount { get { return m_cameraData.Count; } }
-
+        //OYM:  摄像头数量?
         /// <summary>
         /// The material used to render the overlays.
         /// </summary>
-		Material m_waveOverlayMat;
-
+	    public	Material m_waveOverlayMat;
+        //OYM: 暴露出来看看 
         /// <summary>
         /// Manager class for the overlays.
         /// </summary>
 		public OverlayManager OverlayManager { get; private set; }
-
+        //OYM:  覆盖面管理器
         /// <summary>
         /// The scheduler used to manage tasks. 
         /// </summary>
-		Scheduler m_scheduler;
-
-		/// <summary>
-		/// Uses this query for simple xz query's to
-		/// save creating a new one per call.
-		/// </summary>
-		WaveQuery m_query = new WaveQuery(0.0f, 0.0f);
-
+        Scheduler m_scheduler;
+        //OYM:  处理器
+        /// <summary>
+        /// Uses this query for simple xz query's to
+        /// save creating a new one per call.
+        /// </summary>
+        WaveQuery m_query = new WaveQuery(0.0f, 0.0f);
+        //OYM: 波浪询问器
         /// <summary>
         /// If there was a error detected while running.
         /// If true this will shut the ocean down and all
         /// the attached components.
         /// </summary>
 		public bool WasError { get; private set; }
-
-		void Awake()
+        //OYM:  报错
+        void Awake()
 		{
 
             try
@@ -312,7 +315,8 @@ namespace Ceto
                 //There can only be one ocean in a scene
                 if (Instance != null)
 					throw new InvalidOperationException("There can only be one ocean instance.");
-				else
+                //OYM:  检测是否有多个实例的
+                else
 					Instance = this;
 
                 //This is so I dont forget to set these back to false when finished debugging.
@@ -321,6 +325,7 @@ namespace Ceto
                 if (DISABLE_PROJECTED_GRID_BORDER) LogInfo("Disabled projection border is on");
                 if (DISABLE_PROJECTION_FLIPPING) LogInfo("Disabled flipping is on");
                 if (DISABLE_PROJECT_SCENE_VIEW) LogInfo("Disabled project scene is on");
+                //OYM:  报错
 
 #if CETO_DEBUG_SCHEDULER
 				LogInfo("Debug scheduler is on");
@@ -333,26 +338,31 @@ namespace Ceto
 
 #if CETO_USE_STEAM_VR
                 LogInfo("Ceto using StreamVR enabled");
+                //OYM:  蛤?
 #endif
 
                 OceanVR.Initialize();
 
-                WindDirVector = CalculateWindDirVector();
+                WindDirVector = CalculateWindDirVector();//OYM:  计算风力
 
-				if(doublePrecisionProjection)
-					Projection = new Projection3d(this);
-				else
-					Projection = new Projection3f(this);
-				
-				OceanTime = new OceanTime();
-				
-				m_waveOverlayMat = new Material(waveOverlaySdr);
+                if (doublePrecisionProjection)
+                {
+                    Projection = new Projection3d(this);//OYM:  双精度函数
+                }
+                else
+                {
+                    Projection = new Projection3f(this);
+                }
 
-				OverlayManager = new OverlayManager( m_waveOverlayMat);
+                OceanTime = new OceanTime();//OYM:  获取时间,这个地方是考虑到可以改的地方吗
 
-                m_scheduler = new Scheduler(100, 100, this);
+                m_waveOverlayMat = new Material(waveOverlaySdr);//OYM:  创建material
 
-			}
+                OverlayManager = new OverlayManager(m_waveOverlayMat);//OYM:  管理器
+
+                m_scheduler = new Scheduler(100, 100, this);//OYM:  线程设置
+
+            }
 			catch(Exception e)
 			{
 				LogError(e.ToString());
@@ -369,10 +379,16 @@ namespace Ceto
                 //Used in the overlay shader.
 				Matrix4x4 T2S = Matrix4x4.identity;
 				T2S.m00 = 2.0f; T2S.m03 = -1.0f;
-				T2S.m11 = 2.0f; T2S.m13 = -1.0f;
-
-				//Flip Y for render texture.
-				for (int i = 0; i < 4; i++) {
+				T2S.m11 =2.0f; T2S.m13 = -1.0f;
+                /*
+                 * | 2,0,0,-1|
+                 * | 0,2,0,-1|
+                 * | 0,0,0,0|
+                 * | 0,0,0,0|
+                 */
+                //OYM:  这一步没有看明白
+                //Flip Y for render texture.
+                for (int i = 0; i < 4; i++) {
 					T2S[1,i] = -T2S[1,i];
 				}
 
@@ -419,7 +435,8 @@ namespace Ceto
 			catch(Exception e)
 			{
 				LogError(e.ToString());
-				DisableOcean();
+                //OYM:  添加一个快速把自己关上的脚本
+                DisableOcean();
 			}
 
         }
@@ -678,19 +695,19 @@ namespace Ceto
 			}
 		}
 
-		/// <summary>
-		/// Calculates the wind dir vector
-		/// from the wind angle.
-		/// </summary>
-		public Vector3 CalculateWindDirVector()
+        /// <summary>
+        /// Calculates the wind dir vector
+        /// from the wind angle.
+        /// </summary>
+        public Vector3 CalculateWindDirVector()
 		{
-			float theta = windDir * Mathf.PI / 180.0f;
-			float u = -Mathf.Cos(theta);
-			float v = Mathf.Sin(theta);
+            float theta = windDir * Mathf.PI / 180.0f;//OYM:  风力方向
+            float u = -Mathf.Cos(theta);//OYM:  简单的cos与sin函数,cos的积分是sin,sin的积分是cos
+            float v = Mathf.Sin(theta);
 
 			Vector3 dir = new Vector3(u, 0.0f, v);
-			return dir.normalized;
-		}
+            return dir.normalized;//OYM:  返回标准向量
+        }
 
 		/// <summary>
 		/// Suns the dir or up if node has been added.

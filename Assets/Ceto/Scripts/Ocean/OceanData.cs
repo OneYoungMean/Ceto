@@ -67,6 +67,7 @@ namespace Ceto
     /// The size of the overlay map in relation to the screen size.
     /// </summary>
 	public enum OVERLAY_MAP_SIZE { DOUBLE, FULL_HALF, FULL, HALF, QUARTER };
+    //OYM:  2,1,0.5,0.25
 
     /// <summary>
     /// The mode used to blend the overlays when they are rendered into the buffer.

@@ -140,7 +140,7 @@ namespace Ceto
 
             if (tex == null) return;
 
-            if (!(tex is Texture2D))
+            if (!(tex is Texture2D))//OYM:  ÐÂ¼¼ÇÉget
             {
                 Ocean.LogWarning("Can not query overlays " + name + " if texture is not Texture2D");
                 return;

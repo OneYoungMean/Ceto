@@ -12,19 +12,21 @@ namespace Ceto
     public static class OceanVR
     {
 
-        public static bool OpenVRInUse { get; private set; }
+        public static bool OpenVRInUse { get; private set; }//OYM:  默认是false
 
+                                                            //OYM:是否用了VR
 
         public static void Initialize()
         {
 
 #if UNITY_540_OR_HIGHER && CETO_USE_STEAM_VR
-            OpenVRInUse = VRSettings.loadedDeviceName == "OpenVR";
+            OpenVRInUse = VRSettings.loadedDeviceName == "OpenVR";//OYM:  是否用了vr盒子
 #endif
 
         }
 
 #if UNITY_540_OR_HIGHER && CETO_USE_STEAM_VR
+//OYM:  这些是实现一些VR专用的方法
         public static void GetSteamVRLeftEye(Camera cam, out Vector3 position, out Quaternion rotation, out Matrix4x4 projection)
         {
 
@@ -57,6 +59,8 @@ namespace Ceto
         {
             Valve.VR.HmdMatrix44_t proj = SteamVR.instance.hmd.GetProjectionMatrix(eye, cam.nearClipPlane, cam.farClipPlane, SteamVR.instance.graphicsAPI);
             Matrix4x4 m = new Matrix4x4();
+
+            //OYM:  哈哈哈哈哈哈哈好惨
             m.m00 = proj.m0;
             m.m01 = proj.m1;
             m.m02 = proj.m2;

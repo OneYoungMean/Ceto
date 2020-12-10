@@ -13,6 +13,7 @@ namespace Ceto.Common.Threading.Scheduling
     /// Scheduler.
     /// </summary>
     public class Scheduler : IScheduler
+    //OYM:  这里是...多线程的框架?
     {
 
         /// <summary>
@@ -83,7 +84,7 @@ namespace Ceto.Common.Threading.Scheduling
         /// <summary>
 		/// Lock for functions that maybe accessed by task running on another thread.
         /// </summary>
-        readonly object m_lock = new object();
+        readonly object m_lock = new object();      //OYM:  锁定可能在另一个线程上运行的任务访问的功能。
 
 		/// <summary>
 		/// Temporary list hold tasks that have ran.
@@ -119,12 +120,12 @@ namespace Ceto.Common.Threading.Scheduling
 
             MaxWaitTime = 1000.0f;
             MinWaitTime = 100.0f;
-
+            //OYM:  设置最大线程?coroutine是ocean的接口,作用就是启动协程
             m_coroutine = coroutine;
 			MaxTasksPerUpdate = Math.Max(1, maxTasksPerUpdate);
 			MaxFinishPerUpdate = Math.Max(1, maxFinishPerUpdate);
-
-			m_scheduledTasks = new LinkedList<IThreadedTask>();
+            //OYM:  这几个都是链表
+            m_scheduledTasks = new LinkedList<IThreadedTask>();
 			m_finishedTasks = new LinkedList<IThreadedTask>();
 			m_runningTasks = new LinkedList<IThreadedTask>();
 			m_waitingTasks = new LinkedList<IThreadedTask>();
@@ -235,8 +236,8 @@ namespace Ceto.Common.Threading.Scheduling
 	                //Run task on separate thread
 	                //and add to running tasks list.
 					m_runningTasks.AddLast(task);
-					ThreadPool.QueueUserWorkItem(new WaitCallback(RunThreaded), task);
-	            }
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(RunThreaded), task);//OYM:  多线程啊多线程
+                }
 			}
         }
 

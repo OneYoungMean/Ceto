@@ -110,10 +110,10 @@ namespace Ceto
         protected override void Start()
         {
 
-            if (checkTextures && !ignoreQuerys)
+            if (checkTextures && !ignoreQuerys)//OYM:  query:询问,question的原型
             {
                 CheckCanSampleTex(heightMask, "height mask");
-                CheckCanSampleTex(clipMask, "clip mask");
+                CheckCanSampleTex(clipMask, "clip mask");//OYM:  检查是否合法
             }
 
 			m_overlays.Add(new WaveOverlay());

@@ -77,13 +77,13 @@ namespace Ceto
 		{
 			
 			m_ocean = ocean;
-			
-			m_projectorP = new double[16];
+            //OYM:  这玩意本质上还是矩阵,只不过被拉长了
+            m_projectorP = new double[16];
 			m_projectorV = new double[16];
 			m_projectorVP = new double[16];
 			m_projectorIVP = new double[16];
-			m_projectorR = new double[16];
-			m_projectorI = new double[16];
+            m_projectorR = new double[16];
+            m_projectorI = new double[16];
 			
 			MATRIX_BUFFER0 = new double[16];
 			MATRIX_BUFFER1 = new double[16];
@@ -109,12 +109,12 @@ namespace Ceto
 			m_p1 = new double[4];
 			
 			Identity(m_projectorR);
-			
-			m_pointList = new List<double[]>(32);
+            //OYM:  点列表
+            m_pointList = new List<double[]>(32);
 			for(int i = 0; i < 32; i++)
 				m_pointList.Add(new double[3]);
-			
-			m_frustumCorners = new List<double[]>(8);
+            //OYM:  锥视角
+            m_frustumCorners = new List<double[]>(8);
 			for(int i = 0; i < 8; i++)
 				m_frustumCorners.Add(new double[3]);
 			
@@ -123,8 +123,8 @@ namespace Ceto
 			m_quad.Add(new double[]{1, 0, 0, 1});
 			m_quad.Add(new double[]{1, 1, 0, 1});
 			m_quad.Add(new double[]{0, 1, 0, 1});
-			
-			m_corners = new List<double[]>(8);
+            //OYM:  这个....角落?
+            m_corners = new List<double[]>(8);
 			// near
 			m_corners.Add(new double[]{-1, -1, -1, 1}); 
 			m_corners.Add(new double[]{ 1, -1, -1, 1}); 

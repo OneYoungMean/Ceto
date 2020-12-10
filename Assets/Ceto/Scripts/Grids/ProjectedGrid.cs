@@ -218,7 +218,8 @@ namespace Ceto
 
 					if(active)
 					{
-                        UpdateGrid(grid);
+						
+						UpdateGrid(grid);
                         Activate(grid.top, true);
                         Activate(grid.under, true);
 					}
@@ -232,7 +233,7 @@ namespace Ceto
 	            }
 
 				//If the underside not needed disable it.
-				if(!UnderSideNeeded())
+				if (!UnderSideNeeded())
 				{
                     e = m_grids.GetEnumerator();
                     while (e.MoveNext())
