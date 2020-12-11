@@ -914,7 +914,7 @@ namespace Ceto
             //Percentage of verts that will be in the border.
             //Only a small number is needed.
             float border = 0.1f; //OYM:  设置边框所占的百分比
-
+                                 //OYM:  这个边框实际上就是mesh最外面那一圈的延展部分,作者觉得加一圈延边可以防止穿模?
             for (int x = 0; x < numVertsX; x++)
 			{
 				for (int y = 0; y < numVertsY; y++)
@@ -928,44 +928,43 @@ namespace Ceto
 
                     if (!Ocean.DISABLE_PROJECTED_GRID_BORDER)//OYM:  关闭边缘?
                     {
-						//Add border. Values outside of 0-1 are verts that will be in the border.
-						uv.x = uv.x * (1.0f + border*2.0f) - border;
-						uv.y = uv.y * (1.0f + border*2.0f) - border;
-						
-						//The screen uv is used for the interpolation to calculate the
-						//world position from the interpolation matrix so must be in a 0-1 range.
-						Vector2 screenUV = uv;
-						screenUV.x = Mathf.Clamp01(screenUV.x);
-						screenUV.y = Mathf.Clamp01(screenUV.y);
-						
-						//For the edge verts calculate the direction in screen space 
-						//and normalize. Only the directions length is needed but store the
-						//x and y direction because edge colors are output sometimes for debugging.
-						Vector2 edgeDirection = uv;
-						
-						if(edgeDirection.x < 0.0f)
-							edgeDirection.x = Mathf.Abs(edgeDirection.x) / border;
-						else if(edgeDirection.x > 1.0f)
-							edgeDirection.x = Mathf.Max(0.0f, edgeDirection.x-1.0f) / border;
-						else
+                        //Add border. Values outside of 0-1 are verts that will be in the border.
+                        uv.x = uv.x * (1.0f + border * 2.0f) - border; //OYM:  这啥啊....边界的点??
+                        uv.y = uv.y * (1.0f + border * 2.0f) - border; //OYM:  当UV=0的时候,算出来=-0.1,当UV=1.算出来=1.1
+
+                        //The screen uv is used for the interpolation to calculate the
+                        //world position from the interpolation matrix so must be in a 0-1 range.
+                        Vector2 screenUV = uv; //OYM:  记录屏幕UV
+                        screenUV.x = Mathf.Clamp01(screenUV.x);//OYM:  限制0-1
+                        screenUV.y = Mathf.Clamp01(screenUV.y);
+
+                        //For the edge verts calculate the direction in screen space 
+                        //and normalize. Only the directions length is needed but store the
+                        //x and y direction because edge colors are output sometimes for debugging.
+                        Vector2 edgeDirection = uv;//OYM:  对于边缘顶点，请计算屏幕空间中的方向并进行归一化。 仅需要方向长度，但可以存储x和y方向，因为有时会输出边缘颜色以进行调试。
+                                                   //OYM:  底下做了啥还没搞清楚
+                        if (edgeDirection.x < 0.0f)
+                            edgeDirection.x = Mathf.Abs(edgeDirection.x) / border;//OYM:  边界左部分
+                        else if(edgeDirection.x > 1.0f)
+                            edgeDirection.x = Mathf.Max(0.0f, edgeDirection.x - 1.0f) / border;//OYM:  边界右部分
+                        else
 							edgeDirection.x = 0.0f;
 						
 						if(edgeDirection.y < 0.0f)
-							edgeDirection.y = Mathf.Abs(edgeDirection.y) / border;
-						else if(edgeDirection.y > 1.0f)
-							edgeDirection.y = Mathf.Max(0.0f, edgeDirection.y-1.0f) / border;
-						else
+                            edgeDirection.y = Mathf.Abs(edgeDirection.y) / border;//OYM:  这个是边界的前部分
+                        else if(edgeDirection.y > 1.0f)
+                            edgeDirection.y = Mathf.Max(0.0f, edgeDirection.y - 1.0f) / border; //OYM:  这个是边界的后部分
+                        else
 							edgeDirection.y = 0.0f;
-						
-						edgeDirection.x = Mathf.Pow(edgeDirection.x, 2);
+                        //OYM:  只有大于border的时候这里才会有具体的数字,并且看上去貌似没啥用
+                        edgeDirection.x = Mathf.Pow(edgeDirection.x, 2);
 						edgeDirection.y = Mathf.Pow(edgeDirection.y, 2);
-						
-						texcoords[x + y * numVertsX] = edgeDirection;
-						vertices[x + y * numVertsX] = new Vector3(screenUV.x, screenUV.y, 0.0f);
+                        //OYM:  这个是指...啥?
+                        texcoords[x + y * numVertsX] = edgeDirection;//OYM:  这个是uv
+                        vertices[x + y * numVertsX] = new Vector3(screenUV.x, screenUV.y, 0.0f);
 					}
 					else
 					{
-					
 						texcoords[x + y * numVertsX] = new Vector2(0,0);
 						vertices[x + y * numVertsX] = new Vector3(uv.x, uv.y, 0.0f);
 					}
@@ -977,7 +976,8 @@ namespace Ceto
 			{
 				for (int y = 0; y < numVertsY - 1; y++)
 				{
-					indices[num++] = x + y * numVertsX;
+                    //OYM:  这里是放三角形吧,这里是三角形
+                    indices[num++] = x + y * numVertsX;
 					indices[num++] = x + (y + 1) * numVertsX;
 					indices[num++] = (x + 1) + y * numVertsX;
 					
@@ -986,15 +986,14 @@ namespace Ceto
 					indices[num++] = (x + 1) + y * numVertsX;
 				}
 			}
-			
-			Mesh mesh = new Mesh();
-			
-			mesh.vertices = vertices;
+
+            Mesh mesh = new Mesh();//OYM:  创建网格
+
+            mesh.vertices = vertices;
 			mesh.uv = texcoords;
 			mesh.triangles = indices;
             mesh.name = "Ceto Projected Grid Mesh";
-            mesh.hideFlags = HideFlags.HideAndDontSave;
-            ;
+            mesh.hideFlags = HideFlags.HideAndDontSave;//OYM:  作者把mesh藏起来了...难怪
 
 			return mesh;
 		}
