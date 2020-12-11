@@ -149,11 +149,11 @@ namespace Ceto.Common.Threading.Scheduling
             //scheduler was updated.
             FinishTasks();//OYM:  清理自上次以来已完成的所有任务,并更新schedule
 
-			while (TasksRanThisUpdate < MaxTasksPerUpdate)
-			{
+            while (TasksRanThisUpdate < MaxTasksPerUpdate)//OYM:  不超过最大并行任务数
+            {
 
-				if (ScheduledTasks() > 0)
-				{
+                if (ScheduledTasks() > 0)//OYM:  如果任务还有的话
+                {
 					IThreadedTask task = m_scheduledTasks.First.Value;
 					m_scheduledTasks.RemoveFirst();
 					RunTask(task);
@@ -175,8 +175,8 @@ namespace Ceto.Common.Threading.Scheduling
 		/// </summary>
 		void RunTask(IThreadedTask task)
         {
-
-			lock(m_lock)
+            //OYM:  
+            lock(m_lock)
 			{
 
 #if CETO_DEBUG_SCHEDULER
@@ -197,18 +197,19 @@ namespace Ceto.Common.Threading.Scheduling
 					throw new ArgumentException("Task has been cancelled.");
 #endif
 
-                TasksRanThisUpdate++;
+                TasksRanThisUpdate++;//OYM:  本次更新完成的任务数目
 
-	            if (!task.IsThreaded || DisableMultithreading)
-	            {
+
+                if (!task.IsThreaded || DisableMultithreading)//OYM:  非多线程的情况
+                {
 	                //Start task.
 	                task.Start();
-	                //Run task
-					IEnumerator e = task.Run();
+                    //Run task
+                    IEnumerator e = task.Run();//OYM:  主体
 
-	                //If task returned a enumerator 
-	                //the task is a coroutine.
-					if(e != null) 
+                    //If task returned a enumerator 
+                    //the task is a coroutine.
+                    if(e != null) 
 					{
 						if(m_coroutine == null)
 							throw new InvalidOperationException("Scheduler trying to run a coroutine task when coroutine interface is null");
@@ -233,10 +234,12 @@ namespace Ceto.Common.Threading.Scheduling
 	            {
 	                //Start task
 	                task.Start();
-	                //Run task on separate thread
-	                //and add to running tasks list.
-					m_runningTasks.AddLast(task);
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(RunThreaded), task);//OYM:  多线程啊多线程
+                    //Run task on separate thread
+                    //and add to running tasks list.
+                    m_runningTasks.AddLast(task);//OYM:  添加到已经完成的task
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(RunThreaded), task);//OYM:  从线程池那一个出来,执行RunThreaded(Task);
+                                                                                      //OYM:  话说为什么要写成这种奇怪形式啊....
+                                                                                      //OYM:  回头去翻一翻那本多线程的书吧
                 }
 			}
         }
@@ -248,17 +251,17 @@ namespace Ceto.Common.Threading.Scheduling
         {
 
             IThreadedTask task = o as IThreadedTask;
-
-			if (task == null) {
+            //OYM:  判断是不是正确的形式,如果不正确的话就是null
+            if (task == null) {
                 Throw(new InvalidCastException("Object is not a ITask or is null"));
             }
             else
             {
                 try {
-                    task.Run();
+                    task.Run();//OYM:  执行
                 }
                 catch (Exception e) {
-                    Throw(e);
+                    Throw(e); //OYM:  报错
                 }
             }
         }

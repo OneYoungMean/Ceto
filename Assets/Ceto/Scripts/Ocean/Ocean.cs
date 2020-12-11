@@ -370,7 +370,8 @@ namespace Ceto
 			}
 
 		}
-
+        //OYM:  它在start的时候就已经解决生成好了
+        //OYM:  真是奇怪,我还不知道怎么访问它的网格
         void Start()
         {
 			try
@@ -480,7 +481,6 @@ namespace Ceto
 
         void Update()
         {
-
 			try
 			{
 
@@ -689,7 +689,9 @@ namespace Ceto
             }
 			catch(Exception e)
 			{
-				LogError(e.ToString());
+
+                //OYM:  报错了就抛出
+                LogError(e.ToString());
 				DisableOcean();
 			}
 		}
