@@ -376,61 +376,7 @@ namespace Ceto
         {
 			try
 			{
-                //Create a texture to screen space matrix
-                //Used in the overlay shader.
-				Matrix4x4 T2S = Matrix4x4.identity;
-				T2S.m00 = 2.0f; T2S.m03 = -1.0f;
-				T2S.m11 =2.0f; T2S.m13 = -1.0f;
-                /*
-                 * | 2,0,0,-1|
-                 * | 0,2,0,-1|
-                 * | 0,0,1,0|
-                 * | 0,0,0,1|
-                 */
-                //OYM:  这一步没有看明白
-                //Flip Y for render texture.
-                for (int i = 0; i < 4; i++) {
-					T2S[1,i] = -T2S[1,i];
-				}
-
-				Shader.SetGlobalMatrix("Ceto_T2S", T2S);
-
-                //Zero these uniforms to something that wont cause a issue
-				//if the component thats sets them is disabled.
-				Shader.SetGlobalTexture("Ceto_Overlay_NormalMap", Texture2D.blackTexture);
-				Shader.SetGlobalTexture("Ceto_Overlay_HeightMap", Texture2D.blackTexture);
-				Shader.SetGlobalTexture("Ceto_Overlay_FoamMap", Texture2D.blackTexture);
-				Shader.SetGlobalTexture("Ceto_Overlay_ClipMap", Texture2D.blackTexture);
-				Shader.SetGlobalTexture(REFRACTION_GRAB_TEXTURE_NAME, Texture2D.blackTexture);
-                Shader.SetGlobalTexture(DEPTH_GRAB_TEXTURE_NAME, Texture2D.whiteTexture);
-                Shader.SetGlobalTexture(OCEAN_MASK_TEXTURE_NAME0, Texture2D.blackTexture);
-                Shader.SetGlobalTexture(OCEAN_MASK_TEXTURE_NAME1, Texture2D.blackTexture);
-                Shader.SetGlobalTexture(OCEAN_DEPTH_TEXTURE_NAME0, Texture2D.blackTexture);
-                Shader.SetGlobalTexture(OCEAN_DEPTH_TEXTURE_NAME1, Texture2D.blackTexture);
-                Shader.SetGlobalTexture(NORMAL_FADE_TEXTURE_NAME, Texture2D.blackTexture);
-                Shader.SetGlobalTexture("Ceto_SlopeMap0", Texture2D.blackTexture);
-				Shader.SetGlobalTexture("Ceto_SlopeMap1", Texture2D.blackTexture);
-				Shader.SetGlobalTexture("Ceto_DisplacementMap0", Texture2D.blackTexture);
-				Shader.SetGlobalTexture("Ceto_DisplacementMap1", Texture2D.blackTexture);
-				Shader.SetGlobalTexture("Ceto_DisplacementMap2", Texture2D.blackTexture);
-				Shader.SetGlobalTexture("Ceto_DisplacementMap3", Texture2D.blackTexture);
-				Shader.SetGlobalTexture("Ceto_FoamMap0", Texture2D.blackTexture);
-				Shader.SetGlobalTexture("Ceto_FoamMap1", Texture2D.blackTexture);
-				Shader.SetGlobalVector("Ceto_GridSizes", Vector4.one);
-				Shader.SetGlobalVector("Ceto_GridScale", Vector4.one);
-				Shader.SetGlobalVector("Ceto_Choppyness", Vector4.one);
-				Shader.SetGlobalFloat("Ceto_MapSize", 1);
-                Shader.SetGlobalColor("Ceto_FoamTint", Color.white);
-                Shader.SetGlobalTexture("Ceto_FoamTexture0", Texture2D.whiteTexture);
-                Shader.SetGlobalTexture("Ceto_FoamTexture1", Texture2D.whiteTexture);
-				Shader.SetGlobalVector("Ceto_FoamTextureScale0", Vector4.one);
-				Shader.SetGlobalVector("Ceto_FoamTextureScale1", Vector4.one);
-				Shader.SetGlobalFloat("Ceto_MaxWaveHeight", MAX_SPECTRUM_WAVE_HEIGHT);
-                Shader.SetGlobalVector("Ceto_PosOffset", Vector3.zero);
-                Shader.SetGlobalTexture("Ceto_CausticTexture", Texture2D.blackTexture);
-                Shader.SetGlobalVector("Ceto_CausticTextureScale", new Vector4(1,1,0,0));
-                Shader.SetGlobalColor("Ceto_CausticTint", Color.white);
-                Shader.SetGlobalFloat("Ceto_Stero_Enabled", 0.0f);
+                InitializeShader(); //OYM:  静态出来,方便看
             }
 			catch(Exception e)
 			{
@@ -439,6 +385,66 @@ namespace Ceto
                 DisableOcean();
 			}
 
+        }
+        //OYM:  全部静态出来算了
+        static void InitializeShader()
+        {
+            //Create a texture to screen space matrix
+            //Used in the overlay shader. 
+            Matrix4x4 T2S = Matrix4x4.identity; //OYM:  这个矩阵是啥意思?
+            T2S.m00 = 2.0f; T2S.m03 = -1.0f;
+            T2S.m11 = 2.0f; T2S.m13 = -1.0f;
+            /*
+             * | 2,0,0,-1|
+             * | 0,2,0,-1|
+             * | 0,0,1,0|
+             * | 0,0,0,1|
+             */
+            //OYM:  这一步没有看明白
+            //Flip Y for render texture.
+            for (int i = 0; i < 4; i++)
+            {
+                T2S[1, i] = -T2S[1, i];
+            }
+
+            Shader.SetGlobalMatrix("Ceto_T2S", T2S);
+
+            //Zero these uniforms to something that wont cause a issue
+            //if the component thats sets them is disabled.
+            Shader.SetGlobalTexture("Ceto_Overlay_NormalMap", Texture2D.blackTexture);
+            Shader.SetGlobalTexture("Ceto_Overlay_HeightMap", Texture2D.blackTexture);
+            Shader.SetGlobalTexture("Ceto_Overlay_FoamMap", Texture2D.blackTexture);
+            Shader.SetGlobalTexture("Ceto_Overlay_ClipMap", Texture2D.blackTexture);
+            Shader.SetGlobalTexture(REFRACTION_GRAB_TEXTURE_NAME, Texture2D.blackTexture);
+            Shader.SetGlobalTexture(DEPTH_GRAB_TEXTURE_NAME, Texture2D.whiteTexture);
+            Shader.SetGlobalTexture(OCEAN_MASK_TEXTURE_NAME0, Texture2D.blackTexture);
+            Shader.SetGlobalTexture(OCEAN_MASK_TEXTURE_NAME1, Texture2D.blackTexture);
+            Shader.SetGlobalTexture(OCEAN_DEPTH_TEXTURE_NAME0, Texture2D.blackTexture);
+            Shader.SetGlobalTexture(OCEAN_DEPTH_TEXTURE_NAME1, Texture2D.blackTexture);
+            Shader.SetGlobalTexture(NORMAL_FADE_TEXTURE_NAME, Texture2D.blackTexture);
+            Shader.SetGlobalTexture("Ceto_SlopeMap0", Texture2D.blackTexture);
+            Shader.SetGlobalTexture("Ceto_SlopeMap1", Texture2D.blackTexture);
+            Shader.SetGlobalTexture("Ceto_DisplacementMap0", Texture2D.blackTexture);
+            Shader.SetGlobalTexture("Ceto_DisplacementMap1", Texture2D.blackTexture);
+            Shader.SetGlobalTexture("Ceto_DisplacementMap2", Texture2D.blackTexture);
+            Shader.SetGlobalTexture("Ceto_DisplacementMap3", Texture2D.blackTexture);
+            Shader.SetGlobalTexture("Ceto_FoamMap0", Texture2D.blackTexture);
+            Shader.SetGlobalTexture("Ceto_FoamMap1", Texture2D.blackTexture);
+            Shader.SetGlobalVector("Ceto_GridSizes", Vector4.one);
+            Shader.SetGlobalVector("Ceto_GridScale", Vector4.one);
+            Shader.SetGlobalVector("Ceto_Choppyness", Vector4.one);
+            Shader.SetGlobalFloat("Ceto_MapSize", 1);
+            Shader.SetGlobalColor("Ceto_FoamTint", Color.white);
+            Shader.SetGlobalTexture("Ceto_FoamTexture0", Texture2D.whiteTexture);
+            Shader.SetGlobalTexture("Ceto_FoamTexture1", Texture2D.whiteTexture);
+            Shader.SetGlobalVector("Ceto_FoamTextureScale0", Vector4.one);
+            Shader.SetGlobalVector("Ceto_FoamTextureScale1", Vector4.one);
+            Shader.SetGlobalFloat("Ceto_MaxWaveHeight", MAX_SPECTRUM_WAVE_HEIGHT);
+            Shader.SetGlobalVector("Ceto_PosOffset", Vector3.zero);
+            Shader.SetGlobalTexture("Ceto_CausticTexture", Texture2D.blackTexture);
+            Shader.SetGlobalVector("Ceto_CausticTextureScale", new Vector4(1, 1, 0, 0));
+            Shader.SetGlobalColor("Ceto_CausticTint", Color.white);
+            Shader.SetGlobalFloat("Ceto_Stero_Enabled", 0.0f);
         }
 
 		void OnEnable()

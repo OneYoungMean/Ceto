@@ -126,10 +126,10 @@ namespace Ceto
 
 			try
 			{
-				// If enabled activate all meshes.
-                var e = m_grids.GetEnumerator();
-				while(e.MoveNext())
-				{
+                // If enabled activate all meshes.
+                var e = m_grids.GetEnumerator();//OYM:  这里是一个dic,存grid用
+                while (e.MoveNext())//OYM:  为啥要写成这样...怕有人关上?
+                {
                     Grid grid = e.Current.Value;
 					Activate(grid.top, true);
 					Activate(grid.under, true);
