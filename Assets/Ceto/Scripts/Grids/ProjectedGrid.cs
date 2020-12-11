@@ -36,19 +36,21 @@ namespace Ceto
 		/// </summary>
 		public MESH_RESOLUTION resolution = MESH_RESOLUTION.HIGH;
 
-		/// <summary>
-		/// The number of meshes the projected grid is split into.
-		/// A higher density means more meshes and draw calls but
-		/// since they are smaller they can the culled more easily.
-		/// What ever the density the actual number of verts is the same
-		/// for a given mesh resolution.
-		/// </summary>
-		/*public*/ GRID_GROUPS gridGroups = GRID_GROUPS.SINGLE;
 
-		/// <summary>
-		/// Does the mesh receive shadows.
-		/// </summary>
-		public bool receiveShadows = false;
+        /// <summary>
+        /// The number of meshes the projected grid is split into.
+        /// A higher density means more meshes and draw calls but
+        /// since they are smaller they can the culled more easily.
+        /// What ever the density the actual number of verts is the same
+        /// for a given mesh resolution.
+        /// </summary>
+        /*public*/
+        GRID_GROUPS gridGroups = GRID_GROUPS.SINGLE;//OYM:  划分的网格数目,不知道什么原因被作者屏蔽掉了
+
+        /// <summary>
+        /// Does the mesh receive shadows.
+        /// </summary>
+        public bool receiveShadows = false;
 
 		/// <summary>
 		/// The length of the border added to edge of grid 
@@ -199,15 +201,15 @@ namespace Ceto
 			try
 			{
 
-				Shader.SetGlobalFloat("Ceto_GridEdgeBorder", Mathf.Max (0.0f, borderLength));
+                Shader.SetGlobalFloat("Ceto_GridEdgeBorder", Mathf.Max(0.0f, borderLength));//OYM:  设置边界
 
-				int r = ResolutionToNumber(resolution);
+                int r = ResolutionToNumber(resolution);
 				Vector2 screenGridSize = new Vector2(r / (float)ScreenWidth(), r / (float)ScreenHeight());
 				Shader.SetGlobalVector("Ceto_ScreenGridSize", screenGridSize);
 
-				//Check to see if the mesh has been created for this resolution setting.
-				//If not create it.
-	            CreateGrid(resolution);
+                //Check to see if the mesh has been created for this resolution setting.
+                //If not create it.
+                CreateGrid(resolution);//OYM:  创建网格
 
                 var e = m_grids.GetEnumerator();
                 while (e.MoveNext())
@@ -450,8 +452,8 @@ namespace Ceto
         /// </summary>
         int ScreenWidth()
 		{
-			return Mathf.Min(Screen.width, MAX_SCREEN_WIDTH);
-		}
+            return Mathf.Min(Screen.width, MAX_SCREEN_WIDTH);//OYM:  限制分辨率大小
+        }
 
 		/// <summary>
 		/// Gets the screen height.
@@ -459,8 +461,8 @@ namespace Ceto
 		/// </summary>
 		int ScreenHeight()
 		{
-			return Mathf.Min(Screen.height, MAX_SCREEN_HEIGHT);
-		}
+            return Mathf.Min(Screen.height, MAX_SCREEN_HEIGHT);//OYM:  同上
+        }
 
 		/// <summary>
 		/// If called it means a grid is about to be rendered by the current camera.
@@ -550,7 +552,7 @@ namespace Ceto
                 grid = new Grid();
                 m_grids.Add((int)meshRes, grid);
             }
-
+            //OYM:  获取屏幕大小
             int screenWidth = ScreenWidth();
 			int screenHeight = ScreenHeight();
 			int resolution = ResolutionToNumber(meshRes);

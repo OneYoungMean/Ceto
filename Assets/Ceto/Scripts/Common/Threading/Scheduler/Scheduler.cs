@@ -145,11 +145,11 @@ namespace Ceto.Common.Threading.Scheduling
 			TasksRanThisUpdate = 0;
 			TasksFinishedThisUpdate = 0;
 
-			//clean up any tasks that have finished since last time
-			//scheduler was updated.
-			FinishTasks();
+            //clean up any tasks that have finished since last time
+            //scheduler was updated.
+            FinishTasks();//OYM:  清理自上次以来已完成的所有任务,并更新schedule
 
-			while(TasksRanThisUpdate < MaxTasksPerUpdate)
+			while (TasksRanThisUpdate < MaxTasksPerUpdate)
 			{
 
 				if (ScheduledTasks() > 0)
@@ -270,22 +270,22 @@ namespace Ceto.Common.Threading.Scheduling
         /// </summary>
         public void FinishTasks()
         {
-			if(TasksFinishedThisUpdate >= MaxFinishPerUpdate) return;
+            if (TasksFinishedThisUpdate >= MaxFinishPerUpdate) return; //OYM:  蛤?还能多次调用吗?
 
-			lock(m_lock)
-			{
+            lock (m_lock)//OYM:  防止多线程调用,先给锁住
+            {
 
-				m_haveRan.Clear();
+                m_haveRan.Clear();//OYM:  清除已经完成的任务
 
-				//Get a list of all tasks that have ran.
-				var e1 = m_runningTasks.GetEnumerator();
+                //Get a list of all tasks that have ran.  获取所有运行任务的列表
+                var e1 = m_runningTasks.GetEnumerator();
 				while(e1.MoveNext())
 				{
 					IThreadedTask task = e1.Current;
 
 					if(task.Ran)
-						m_haveRan.AddLast(task);
-				}
+                        m_haveRan.AddLast(task);//OYM:  把需要完成的任务添加到这里
+                }
 
 				//Remove from running list and add to finished list.
 				var e2 = m_haveRan.GetEnumerator();
@@ -640,7 +640,7 @@ namespace Ceto.Common.Threading.Scheduling
 				if (IsWaiting(task))
 					throw new ArgumentException("Task is currently waiting.");
 #endif
-
+                //OYM:  
                 m_runningTasks.Remove(task);
 
 				if(!m_shutingDown && !task.NoFinish && !task.Cancelled)

@@ -383,8 +383,8 @@ namespace Ceto
                 /*
                  * | 2,0,0,-1|
                  * | 0,2,0,-1|
-                 * | 0,0,0,0|
-                 * | 0,0,0,0|
+                 * | 0,0,1,0|
+                 * | 0,0,0,1|
                  */
                 //OYM:  这一步没有看明白
                 //Flip Y for render texture.
@@ -430,7 +430,6 @@ namespace Ceto
                 Shader.SetGlobalVector("Ceto_CausticTextureScale", new Vector4(1,1,0,0));
                 Shader.SetGlobalColor("Ceto_CausticTint", Color.white);
                 Shader.SetGlobalFloat("Ceto_Stero_Enabled", 0.0f);
-
             }
 			catch(Exception e)
 			{
@@ -686,8 +685,8 @@ namespace Ceto
                 if (m_scheduler == null) return;
 				m_scheduler.DisableMultithreading = DISABLE_ALL_MULTITHREADING;
 				m_scheduler.CheckForException();
-				m_scheduler.Update();
-			}
+                m_scheduler.Update();//OYM:  更新线程,完成任务
+            }
 			catch(Exception e)
 			{
 				LogError(e.ToString());

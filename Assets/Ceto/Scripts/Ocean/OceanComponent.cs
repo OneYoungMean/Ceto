@@ -32,8 +32,8 @@ namespace Ceto
 			try
 			{
 				m_ocean = GetComponent<Ocean>();
-				m_ocean.Register(this);
-			}
+                m_ocean.Register(this);//OYM:  注册该插件
+            }
 			catch(Exception e)
 			{
 				Ocean.LogError(e.ToString());
