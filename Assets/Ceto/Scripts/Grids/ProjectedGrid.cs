@@ -203,16 +203,17 @@ namespace Ceto
 
                 Shader.SetGlobalFloat("Ceto_GridEdgeBorder", Mathf.Max(0.0f, borderLength));//OYM:  设置边界
 
-                int r = ResolutionToNumber(resolution);
-				Vector2 screenGridSize = new Vector2(r / (float)ScreenWidth(), r / (float)ScreenHeight());
-				Shader.SetGlobalVector("Ceto_ScreenGridSize", screenGridSize);
+                int r = ResolutionToNumber(resolution);//OYM:  获取精度对应的参数
+                Vector2 screenGridSize = new Vector2(r / (float)ScreenWidth(), r / (float)ScreenHeight());//OYM:  获取网格大小(注意是倒数)
+                Shader.SetGlobalVector("Ceto_ScreenGridSize", screenGridSize);//OYM:  设置网格大小
 
                 //Check to see if the mesh has been created for this resolution setting.
                 //If not create it.
+
                 CreateGrid(resolution);//OYM:  创建网格
 
                 var e = m_grids.GetEnumerator();
-                while (e.MoveNext())
+                while (e.MoveNext())//OYM:  
                 {
                     Grid grid = e.Current.Value;
 					//If this mesh is the one for the current resolution setting.
@@ -542,12 +543,13 @@ namespace Ceto
 		/// <summary>
 		/// Creates the grid for this resolution setting.
 		/// </summary>
-        void CreateGrid(MESH_RESOLUTION meshRes)
+        void CreateGrid(MESH_RESOLUTION meshRes) 
         {
 
             Grid grid = null;
 
-            if(!m_grids.TryGetValue((int)meshRes, out grid))
+            if (!m_grids.TryGetValue((int)meshRes, out grid))//OYM:  先获取一下网格,如果能获取到就不创建新的了
+                                                             //OYM:  注意一下,这里的int转换出来是1234,但是下面那个取出来是1248.
             {
                 grid = new Grid();
                 m_grids.Add((int)meshRes, grid);
@@ -555,27 +557,28 @@ namespace Ceto
             //OYM:  获取屏幕大小
             int screenWidth = ScreenWidth();
 			int screenHeight = ScreenHeight();
-			int resolution = ResolutionToNumber(meshRes);
-			int groups = ChooseGroupSize(resolution, gridGroups, screenWidth, screenHeight);
+            int resolution = ResolutionToNumber(meshRes);//OYM:  对就是这里
+            int groups = ChooseGroupSize(resolution, gridGroups, screenWidth, screenHeight);//OYM:  选择分割的合适大小
 
-			if(grid.screenWidth == screenWidth && grid.screenHeight == screenHeight && grid.groups == groups)
+            if(grid.screenWidth == screenWidth && grid.screenHeight == screenHeight && grid.groups == groups)
 			{
-				//Have already created a grid for this 
-				//resolution at the current screen size
-				return;
+                //OYM:  已经在当前分辨率下创建了一个网格
+                //Have already created a grid for this 
+                //resolution at the current screen size
+                return;
 			}
 			else
 			{
 
-				//Grid has either not been created or the screen has been resized.
-				//Clear grid and create.
-				ClearGrid(grid);
+                //Grid has either not been created or the screen has been resized.
+                //Clear grid and create.
+                ClearGrid(grid);//OYM:  创建一个网格
 
-				grid.screenWidth = screenWidth;
+                grid.screenWidth = screenWidth;
 				grid.screenHeight = screenHeight;
-				grid.resolution = resolution;
-				grid.groups = groups;
-			}
+                grid.resolution = resolution;//OYM:  解析度
+                grid.groups = groups;//OYM:  数目,-1代表只有一个
+            }
 
             //Create the quads that will make up the grid.
             //The grid covers the screen and is split up 
@@ -585,7 +588,6 @@ namespace Ceto
             //For each mesh make a gameobject for the top side and under side.
             foreach (Mesh mesh in meshs)
             {
-
 				if(oceanTopSideMat != null)
 				{
 
@@ -660,8 +662,8 @@ namespace Ceto
 		/// </summary>
 		void ClearGrid(Grid grid)
 		{
-
-			if(grid == null) return;
+            //删除所有的go,释放缓存
+            if(grid == null) return;
 
 			grid.screenWidth = 0;
 			grid.screenHeight = 0;
@@ -779,28 +781,28 @@ namespace Ceto
 				return 512;
 
 			case GRID_GROUPS.SINGLE:
-				//special case. Will try and create just 1 mesh.
-				return -1; 
+                    //special case. Will try and create just 1 mesh. 
+                    //OYM:  只创建一个唯一的mesh 
+                    return -1; 
 				
 			default:
 				return 128;
 			}
 
 		}
-
 		/// <summary>
 		/// Chooses the number of verts that can be in each mesh given the mesh resolution. 
 		/// </summary>
 		int ChooseGroupSize(int resolution, GRID_GROUPS groups, int width, int height)
 		{
 			int numVertsX = 0, numVertsY = 0;
-			int groupSize = GroupToNumber(groups);
-			
-			if(groupSize == -1)
+            int groupSize = GroupToNumber(groups);//OYM:  -1,2,3,4,4为最好
+
+            if(groupSize == -1)
 			{
-				//If group size -1 try and create just a single mesh.
-				numVertsX = width / resolution;
-				numVertsY = height / resolution;
+                //If group size -1 try and create just a single mesh.
+                numVertsX = width / resolution;//OYM:  1,2,4,8,16,1为最好
+                numVertsY = height / resolution;
 			}
 			else
 			{
@@ -808,23 +810,25 @@ namespace Ceto
 				numVertsX = groupSize / resolution;
 				numVertsY = groupSize / resolution;
 			}
-			
-			//If the number of verts is greater than Unitys max then will have to use a larger number of verts.
-			while(numVertsX * numVertsY > 65000)
+            //OYM:  这里的numVertsY与numVertsX是防止加载的网格过大而设置的
+            //OYM:  一旦发现网格超限就缩小网格的分割,弄成多个子网格
+            //If the number of verts is greater than Unitys max then will have to use a larger number of verts.
+            //OYM:  unity规定一个mesh只能有65536个顶点
+            while (numVertsX * numVertsY > 65000)
 			{
 				//This should never happen as the Extreme size should not be over max verts
 				if(groups == GRID_GROUPS.EXTREME)
 					throw new InvalidOperationException("Can not increase group size");
-				
-				int nextSize = (int)groups + 1;
-				
-				//Ocean.LogWarning("Mesh resolution to high for group size. Trying next group size of " + ((GRID_GROUPS)nextSize));
 
-				groups = (GRID_GROUPS)nextSize;
+                int nextSize = (int)groups + 1;//OYM:  注意,这里是+1,而不是*2
+
+                //Ocean.LogWarning("Mesh resolution to high for group size. Trying next group size of " + ((GRID_GROUPS)nextSize));
+
+                groups = (GRID_GROUPS)nextSize;
 				
 				groupSize = GroupToNumber(groups);
-				
-				numVertsX = groupSize / resolution;
+               
+                numVertsX = groupSize / resolution;
 				numVertsY = groupSize / resolution;
 			}
 
@@ -862,25 +866,25 @@ namespace Ceto
 			}
 			else
 			{
-				numVertsX = width / resolution;
-				numVertsY = height / resolution;
-				numX = 1;
-				numY = 1;
-				w = 1.0f;
-				h = 1.0f;
-			}
+                numVertsX = width / resolution; //OYM:  横向顶点数量
+                numVertsY = height / resolution;//OYM:  纵向顶点数量
+                numX = 1;//OYM:  横向网格数量
+                numY = 1;//OYM:  纵向网格数量
+                w = 1.0f; //OYM:  numX的倒数
+                h = 1.0f;//OYM:  numY的倒数
+            }
 
-			List<Mesh> quads = new List<Mesh>();
-			
-			for(int x = 0; x < numX; x++)
+            List<Mesh> quads = new List<Mesh>(); //OYM:  创建网格列表
+
+            for(int x = 0; x < numX; x++)
 			{
 				for(int y = 0; y < numY; y++)
 				{
-					float ux = (float)x * w;
+					float ux = (float)x * w;  
 					float uy = (float)y * h;
-
-					Mesh quad = CreateQuad(numVertsX, numVertsY, ux, uy, w, h);
-					quads.Add(quad);
+                    //OYM:  等比例分割
+                    Mesh quad = CreateQuad(numVertsX, numVertsY, ux, uy, w, h);//OYM:  按照位置,挨个挨个建mesh
+                    quads.Add(quad);
 					
 				}
 				
@@ -900,32 +904,30 @@ namespace Ceto
 		/// to try and minimize how often it can be seen but seeing the edge border is better
 		/// than having the grid pull from the screen.
 		/// </summary>
-		public Mesh CreateQuad(int numVertsX, int numVertsY, float ux, float uy, float w, float h)
+		public Mesh CreateQuad(int numVertsX, int numVertsY, float offsetX, float offsetY, float w, float h)
 		{
-			
-			Vector3[] vertices = new Vector3[numVertsX * numVertsY];
-			Vector2[] texcoords = new Vector2[numVertsX * numVertsY];
-			int[] indices = new int[numVertsX * numVertsY * 6];
-			
-			//Percentage of verts that will be in the border.
-			//Only a small number is needed.
-			float border = 0.1f;
-			
-			for (int x = 0; x < numVertsX; x++)
+
+            Vector3[] vertices = new Vector3[numVertsX * numVertsY];//OYM:  所有顶点的合集
+            Vector2[] texcoords = new Vector2[numVertsX * numVertsY];//OYM:  缩放?
+            int[] indices = new int[numVertsX * numVertsY * 6];//OYM:  设置下标?这个看上去更像是三角形之类的
+
+            //Percentage of verts that will be in the border.
+            //Only a small number is needed.
+            float border = 0.1f; //OYM:  设置边框所占的百分比
+
+            for (int x = 0; x < numVertsX; x++)
 			{
 				for (int y = 0; y < numVertsY; y++)
 				{
+                    Vector2 uv = new Vector3((float)x / (float)(numVertsX - 1), (float)y / (float)(numVertsY - 1)); //OYM:  啊这
+                                                                                                                    //OYM:  -1是为了处理边缘部分,UV从0开始数的
+                    uv.x *= w;//OYM:  计算UV
+                    uv.x += offsetX;//OYM:  这应该是偏移量
+                    uv.y *= h;
+					uv.y += offsetY;
 
-                    Vector2 uv = new Vector3((float)x / (float)(numVertsX - 1), (float)y / (float)(numVertsY - 1));
-					
-					uv.x *= w;
-					uv.x += ux;
-					
-					uv.y *= h;
-					uv.y += uy;
-
-					if(!Ocean.DISABLE_PROJECTED_GRID_BORDER)
-					{
+                    if (!Ocean.DISABLE_PROJECTED_GRID_BORDER)//OYM:  关闭边缘?
+                    {
 						//Add border. Values outside of 0-1 are verts that will be in the border.
 						uv.x = uv.x * (1.0f + border*2.0f) - border;
 						uv.y = uv.y * (1.0f + border*2.0f) - border;

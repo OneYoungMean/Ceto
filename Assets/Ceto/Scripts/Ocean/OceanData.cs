@@ -14,19 +14,19 @@ namespace Ceto
     /// </summary>
 	public enum MESH_RESOLUTION {  LOW, MEDIUM, HIGH, ULTRA, EXTREME  };
 
-	/// <summary>
-	/// The number of meshes the projected grid is split into.
-	/// A higher group means more meshes and draw calls but
-	/// since they are smaller they can the culled more easily.
-	/// What ever the grouping the actual number of verts is the same
-	/// for a given mesh resolution.
-	/// </summary>
-	public enum GRID_GROUPS { SINGLE = 0, LOW = 1, MEDIUM = 2, HIGH = 3, EXTREME = 4 };
-	
+    /// <summary>
+    /// The number of meshes the projected grid is split into.
+    /// A higher group means more meshes and draw calls but
+    /// since they are smaller they can the culled more easily.
+    /// What ever the grouping the actual number of verts is the same
+    /// for a given mesh resolution.
+    /// </summary>
+    public enum GRID_GROUPS { SINGLE = 0, LOW = 1, MEDIUM = 2, HIGH = 3, EXTREME = 4 };  //OYM:  反正是可以选的
+
     /// <summary>
     /// The resolution of the reflection render target texture.
     /// </summary>
-	public enum REFLECTION_RESOLUTION { FULL, HALF, QUARTER };
+    public enum REFLECTION_RESOLUTION { FULL, HALF, QUARTER };
 
     /// <summary>
     /// The resolution of the refraction render target texture.
