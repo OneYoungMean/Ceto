@@ -11,7 +11,8 @@ namespace Ceto.Common.Unity.Utility
     /// When the object gets rendered each function is called.
     /// Allows for some custom code to run before rendering.
     /// </summary>
-	public class NotifyOnWillRender : NotifyOnEvent
+    //OYM:  调用一些函数?
+    public class NotifyOnWillRender : NotifyOnEvent
 	{
 	
         /// <summary>
@@ -20,7 +21,9 @@ namespace Ceto.Common.Unity.Utility
 		void OnWillRenderObject()
 		{
 			OnEvent();
-		}
+            //Debug.Log(gameObject.name + " is being rendered by " + Camera.current.name + " at " + Time.time);
+            //OYM:  总之就是每一个camera渲染这个gameobject前都会调用这个方法,并且是不与update同步的
+        }
 
 
 	}

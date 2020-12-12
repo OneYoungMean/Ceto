@@ -590,8 +590,8 @@ namespace Ceto
             {
 				if(oceanTopSideMat != null)
 				{
-
-					GameObject top = new GameObject("Ceto TopSide Grid LOD: " + meshRes);
+                    //OYM:  创建海洋实体
+                    GameObject top = new GameObject("Ceto TopSide Grid LOD: " + meshRes);
 				
 	                MeshFilter filter = top.AddComponent<MeshFilter>();
 	                MeshRenderer renderer = top.AddComponent<MeshRenderer>();

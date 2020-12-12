@@ -10,7 +10,7 @@ using Ceto.Common.Unity.Utility;
 
 namespace Ceto
 {
-
+    //OYM:  作者说,这是一个反射的类,假设海面是平坦的,并且用反射粗糙度减少波浪的伪影
     /// <summary>
     /// Class to provide reflections using the planar reflection method.
     /// 
