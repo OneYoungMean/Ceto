@@ -483,12 +483,13 @@ namespace Ceto
                 CameraData data = m_ocean.FindCameraData(cam);
 
 				if(data.projection == null)
-					data.projection = new ProjectionData();
+                    data.projection = new ProjectionData();//OYM:  获取...这啥,创建投影数据?
 
+                //OYM:  作者说,如果相机还没计算项目的投影的话,则立即计算.
                 //If the projection for this camera has 
                 //not been calculated yet do it now.
-                if (!data.projection.IsViewUpdated(cam))
-				{
+                if (!data.projection.IsViewUpdated(cam))//OYM:  
+                {
                     //Update set to true in this function call
                     m_ocean.Projection.UpdateProjection(cam, data);
 
@@ -605,7 +606,7 @@ namespace Ceto
                     renderer.sharedMaterial = oceanTopSideMat;//OYM:  设置mat 
                     renderer.reflectionProbeUsage = reflectionProbes; //OYM:  设置反射球(所以还是用unity的反射吗)
                     top.layer = LayerMask.NameToLayer(Ocean.OCEAN_LAYER);//OYM:  设置层级
-                    top.hideFlags = HideFlags.HideAndDontSave; //OYM:  难怪选不中,原来在这里被藏起来了
+                    //top.hideFlags = HideFlags.HideAndDontSave; //OYM:  难怪选不中,原来在这里被藏起来了
 
                     //Must render reflection first or it will cause so artefacts on ocean 
                     //for some reason. Its related to the overlays but exact cause is unknown.

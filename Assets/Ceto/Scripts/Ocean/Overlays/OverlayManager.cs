@@ -699,7 +699,7 @@ namespace Ceto
 
                 m_overlayMat.SetFloat("Ceto_Overlay_Alpha", Mathf.Max(0.0f, overlay.FoamTex.alpha) * overlay.DistanceAlpha);
 				m_overlayMat.SetFloat("Ceto_Overlay_MaskAlpha", Mathf.Max(0.0f, overlay.FoamTex.maskAlpha));
-				m_overlayMat.SetTexture("Ceto_Overlay_Foam", (overlay.FoamTex.tex != null) ? overlay.FoamTex.tex : Texture2D.blackTexture);
+                m_overlayMat.SetTexture("Ceto_Overlay_Foam", (overlay.FoamTex.tex != null) ? overlay.FoamTex.tex : Texture2D.blackTexture);
 				m_overlayMat.SetTexture("Ceto_Overlay_FoamMask", (overlay.FoamTex.mask != null) ? overlay.FoamTex.mask : Texture2D.blackTexture);
 				m_overlayMat.SetFloat("Ceto_Overlay_MaskMode", (float)overlay.FoamTex.maskMode);
                 m_overlayMat.SetVector("Ceto_TextureFoam", (overlay.FoamTex.textureFoam) ? TEXTURE_FOAM : DONT_TEXTURE_FOAM);

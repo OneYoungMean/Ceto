@@ -27,34 +27,42 @@ namespace Ceto
         public bool TightFit { get; set; }
 
         /// <summary>
-        /// A parent ocean object.
+        /// A parent ocean object. 
         /// </summary>
-        Ocean m_ocean;
-		
-		/// <summary>
-		/// The projector projection, view and inverse view projection matrix.
-		/// </summary>
-		double[] m_projectorP, m_projectorV, m_projectorVP, m_projectorIVP;
-		
-		/// <summary>
-		/// The projector range and interpolation matrix.
-		/// </summary>
-		double[] m_projectorR, m_projectorI;
-		
-		/// <summary>
-		/// The frustum corners in world space.
-		/// </summary>
-		List<double[]> m_frustumCorners;
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		List<double[]> m_pointList;
-		
-		/// <summary>
-		/// The corner points of a quad.
-		/// </summary>
-		List<double[]> m_quad;
+        Ocean m_ocean;//OYM:  ocean
+
+        /// <summary>
+        /// The projector projection, view and inverse view projection matrix.
+        /// </summary>
+        double[]
+            m_projectorP, //OYM:  投影矩阵
+            m_projectorV, //OYM:  视觉矩阵
+            m_projectorVP, //OYM:  投影转换到视觉矩阵
+            m_projectorIVP; //OYM:  反~矩阵
+
+        //OYM:  投影范围与差值矩阵?
+        /// <summary>
+        /// The projector range and interpolation matrix.
+        /// </summary>
+        double[] m_projectorR, m_projectorI;
+
+        //OYM:  世界空间的视锥角
+        /// <summary>
+        /// The frustum corners in world space.
+        /// </summary>
+        List<double[]> m_frustumCorners;
+
+        //OYM:  点列表吧
+        /// <summary>
+        /// 
+        /// </summary>
+        List<double[]> m_pointList;
+
+        //OYM:  四边形的角点
+        /// <summary>
+        /// The corner points of a quad.
+        /// </summary>
+        List<double[]> m_quad;
 		
 		/// <summary>
 		/// The corner points of a frustum box.
@@ -77,7 +85,7 @@ namespace Ceto
 		{
 			
 			m_ocean = ocean;
-            //OYM:  这玩意本质上还是矩阵,只不过被拉长了
+            //OYM:  这玩意本质上还是矩阵,只不过是double类型
             m_projectorP = new double[16];
 			m_projectorV = new double[16];
 			m_projectorVP = new double[16];
