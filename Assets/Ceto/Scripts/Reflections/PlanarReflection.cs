@@ -26,72 +26,72 @@ namespace Ceto
 	public class PlanarReflection : OceanComponent
     {
 
-		public const float MAX_REFLECTION_INTENSITY = 2.0f;
-		public const float MAX_REFLECTION_DISORTION = 4.0f;
-
+        public const float MAX_REFLECTION_INTENSITY = 2.0f;//OYM:  最大反射强度
+        public const float MAX_REFLECTION_DISTORTION = 4.0f;//OYM:   最大失真距离
+        //OYM:  需要反射的层
         /// <summary>
         /// The layers that will be rendered for the reflections.
         /// </summary>
 		public LayerMask reflectionMask = 1;
-
+        //OYM:  反射处理方式
         /// <summary>
         /// The resolution of the reflection texture relative to the screen.
         /// </summary>
         public REFLECTION_RESOLUTION reflectionResolution = REFLECTION_RESOLUTION.HALF;
-
+        //OYM:  反射摄像头距离剪切面的偏移
         /// <summary>
         /// The relfections cameras offset from the clip plane.
         /// </summary>
         public float clipPlaneOffset = 0.07f;
-        
+        //OYM:  反射武器
         /// <summary>
         /// Should the reflection camera have fog enabled 
         /// when rendering.
         /// </summary>
         public bool fogInReflection = false;
-
+        //OYM:  反射天空盒子
         /// <summary>
         /// Should the skybox be reflected.
         /// </summary>
         public bool skyboxInReflection = true;
-
-		/// <summary>
-		/// If true will copy the cull distances from the camera.
-		/// </summary>
-		public bool copyCullDistances;
-
+        //OYM:  复制剔除距离
+        /// <summary>
+        /// If true will copy the cull distances from the camera.
+        /// </summary>
+        public bool copyCullDistances;
+        //OYM:  模糊模式
         /// <summary>
         /// The blur mode. Down sampling is faster but will lose resolution.
         /// </summary>
         public ImageBlur.BLUR_MODE blurMode = ImageBlur.BLUR_MODE.OFF;
-		
-		/// Blur iterations - larger number means more blur.
-		[Range(0, 4)]
+        //OYM:  模糊迭代次数
+        /// Blur iterations - larger number means more blur.
+        [Range(0, 4)]
 		public int blurIterations = 1;
-		
-		/// Blur spread for each iteration. Lower values
-		/// give better looking blur, but require more iterations to
-		/// get large blurs. Value is usually between 0.5 and 1.0.
-		[Range(0.5f, 1.0f)]
+        //OYM:  模糊扩散
+        /// Blur spread for each iteration. Lower values
+        /// give better looking blur, but require more iterations to
+        /// get large blurs. Value is usually between 0.5 and 1.0.
+        [Range(0.5f, 1.0f)]
 		/*public*/ float blurSpread = 0.6f;
-
+        //OYM:  反射颜色
         /// <summary>
         /// Tints the reflection color.
         /// </summary>
 		public Color reflectionTint = Color.white;
-
+        //OYM:  反射强度
         /// <summary>
         /// Adjusts the reflection intensity.
         /// </summary>
 		[Range(0.0f, MAX_REFLECTION_INTENSITY)]
 		public float reflectionIntensity = 0.6f;
-
+        //OYM:  反射失真度
         /// <summary>
         /// Distorts the reflections based on the wave normal.
         /// </summary>
-		[Range(0.0f, MAX_REFLECTION_DISORTION)]
+		[Range(0.0f, MAX_REFLECTION_DISTORTION)]
         public float reflectionDistortion = 0.5f;
-
+        //OYM:  注释说,允许本地反射方法,你需要提供反射签名.ceto不会修改纹理,并且保留对其引用.
         /// <summary>
         /// Assign to provide your custom reflection rendering method.
         /// The function must have the following signature...
@@ -105,7 +105,7 @@ namespace Ceto
         /// Ceto will not modify this texture or keep a reference to it.
         /// 
         /// </summary>
-        public Func<GameObject, RenderTexture> RenderReflectionCustom;
+        public Func<GameObject, RenderTexture> RenderReflectionCustom; //OYM:  Func可以用来存储方法
 
         /// <summary>
         /// If a custom reflection method is provide this 
@@ -113,17 +113,17 @@ namespace Ceto
         /// gameobject where the transform contains the
         /// reflections plane position.
         /// </summary>
-		GameObject m_dummy;
+		GameObject m_dummy; //OYM:  对象
 
-		/// <summary>
-		/// The used to blur the reflections.
-		/// </summary>
-		ImageBlur m_imageBlur;
+        /// <summary>
+        /// The used to blur the reflections.
+        /// </summary>
+        ImageBlur m_imageBlur; //OYM:  模糊
 
-		/// <summary>
-		/// The blur shader.
-		/// </summary>
-		[HideInInspector]
+        /// <summary>
+        /// The blur shader.
+        /// </summary>
+        [HideInInspector]
 		public Shader blurShader;
 
         void Start()

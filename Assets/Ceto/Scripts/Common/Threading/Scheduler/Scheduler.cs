@@ -318,11 +318,8 @@ namespace Ceto.Common.Threading.Scheduling
 						m_finishedTasks.RemoveFirst();
 					}
                 }
-
 				m_haveRan.Clear();
-            	
 			}
-
         }
 
         /// <summary>

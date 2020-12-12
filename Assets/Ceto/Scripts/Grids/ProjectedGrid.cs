@@ -465,15 +465,15 @@ namespace Ceto
             return Mathf.Min(Screen.height, MAX_SCREEN_HEIGHT);//OYM:  同上
         }
 
-		/// <summary>
-		/// If called it means a grid is about to be rendered by the current camera.
-		/// </summary>
+        /// <summary>
+        /// If called it means a grid is about to be rendered by the current camera.
+        /// </summary>
+        //OYM:  调用来表示当前相机渲染的网格
         void ApplyProjection(GameObject go)
         {
 
 			try
 			{
-
 				if(!enabled) return;
 
 				Camera cam = Camera.current;
@@ -596,20 +596,21 @@ namespace Ceto
 	                MeshFilter filter = top.AddComponent<MeshFilter>();
 	                MeshRenderer renderer = top.AddComponent<MeshRenderer>();
 
-					//The notify script will call the added functions when OnWillRender is called. 
-					NotifyOnWillRender willRender = top.AddComponent<NotifyOnWillRender>();
-		
-					filter.sharedMesh = mesh;
-	                renderer.shadowCastingMode = ShadowCastingMode.Off;
-					renderer.receiveShadows = receiveShadows;
-					renderer.sharedMaterial = oceanTopSideMat;
-					renderer.reflectionProbeUsage = reflectionProbes;
-					top.layer = LayerMask.NameToLayer(Ocean.OCEAN_LAYER);
+                    //The notify script will call the added functions when OnWillRender is called. 
+                    NotifyOnWillRender willRender = top.AddComponent<NotifyOnWillRender>();//OYM:  本质上是一个component.实际上还不清楚
+
+                    filter.sharedMesh = mesh; //OYM:  设置mesh
+                    renderer.shadowCastingMode = ShadowCastingMode.Off; //OYM:  不投射阴影
+                    renderer.receiveShadows = receiveShadows;//OYM:   是否产生阴影
+                    renderer.sharedMaterial = oceanTopSideMat;//OYM:  设置mat 
+                    renderer.reflectionProbeUsage = reflectionProbes; //OYM:  设置反射球(所以还是用unity的反射吗)
+                    top.layer = LayerMask.NameToLayer(Ocean.OCEAN_LAYER);//OYM:  设置层级
                     top.hideFlags = HideFlags.HideAndDontSave; //OYM:  难怪选不中,原来在这里被藏起来了
 
                     //Must render reflection first or it will cause so artefacts on ocean 
                     //for some reason. Its related to the overlays but exact cause is unknown.
-                    willRender.AddAction(m_ocean.RenderReflection);
+                    willRender.AddAction(m_ocean.RenderReflection); //OYM:  需要先渲染反射,否则海洋可能看起来像是人工制品一样
+                                                                    //OYM:  这底下的方法就难啃了
 
                     willRender.AddAction(ApplyProjection);
 					willRender.AddAction(m_ocean.RenderWaveOverlays);

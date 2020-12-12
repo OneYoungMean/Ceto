@@ -739,7 +739,7 @@ namespace Ceto
 			
 			return m_sun.GetComponent<Light>().color;
 		}
-
+        //OYM:  获取相机数据
         /// <summary>
         /// Finds the camera data for this camera.
         /// If no data exists then create new data
@@ -747,7 +747,7 @@ namespace Ceto
         /// </summary>
 		public CameraData FindCameraData(Camera cam)
 		{
-
+            //OYM:  获取相机信息
             if (cam == null)
                 throw new InvalidOperationException("Can not find camera data for null camera");
 
@@ -755,16 +755,15 @@ namespace Ceto
 
             if (!m_cameraData.TryGetValue(cam, out data))
             {
-                data = new CameraData();
+                data = new CameraData();//OYM:  没有就新建一个
                 m_cameraData.Add(cam, data);
             }
 
             if (data.settings == null && !data.checkedForSettings)
             {
-                data.settings = cam.GetComponent<OceanCameraSettings>();
-                data.checkedForSettings = true;
+                data.settings = cam.GetComponent<OceanCameraSettings>(); //OYM:  相机上要有这个啥啥设定
+                data.checkedForSettings = true;//OYM:  如果有,则表示有数据
             }
-
             return data;
 		}
 
