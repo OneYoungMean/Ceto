@@ -605,7 +605,7 @@ namespace Ceto
 					renderer.sharedMaterial = oceanTopSideMat;
 					renderer.reflectionProbeUsage = reflectionProbes;
 					top.layer = LayerMask.NameToLayer(Ocean.OCEAN_LAYER);
-					top.hideFlags = HideFlags.HideAndDontSave;
+                    top.hideFlags = HideFlags.HideAndDontSave; //OYM:  难怪选不中,原来在这里被藏起来了
 
                     //Must render reflection first or it will cause so artefacts on ocean 
                     //for some reason. Its related to the overlays but exact cause is unknown.
