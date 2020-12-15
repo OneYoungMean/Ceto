@@ -8,8 +8,7 @@ using Ceto.Common.Unity.Utility;
 using Ceto.Common.Threading.Scheduling;
 
 #pragma warning disable 162, 649
-//OYM:  尾部波浪的仿真值得研究一下
-//OYM:  看一看高档次的论文  
+
 namespace Ceto
 {
 	
@@ -212,8 +211,7 @@ namespace Ceto
         /// Adds the detail to the foam from the overlays and spectrum.
         /// </summary>
         public FoamTexture foamTexture0;
-        //OYM:  浮沫贴图   
-   
+        //OYM:  浮沫贴图
         /// <summary>
         /// The foam texture.
         /// Adds the detail to the foam from the overlays and spectrum.
