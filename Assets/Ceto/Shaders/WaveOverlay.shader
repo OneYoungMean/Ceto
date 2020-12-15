@@ -134,24 +134,23 @@ Shader "Ceto/WaveOverlay"
 	
 	float4 fragWaveOverlayFoam(v2f IN) : COLOR
 	{ 
-		
+	
 		float foam = tex2D(Ceto_Overlay_Foam, IN.uvtex).a;
 		float mask = tex2D(Ceto_Overlay_FoamMask, IN.uvmask).a;
 		
-		mask = saturate(mask * Ceto_Overlay_MaskAlpha); //OYM：saturate means clamps it's input between 0 and 1.
+		mask = saturate(mask * Ceto_Overlay_MaskAlpha);
 		
 		ApplyMaskAndAlpha(foam, mask, Ceto_Overlay_Alpha);
 
 		return float4(foam.xx * Ceto_TextureFoam, 0, mask);
-		
 	}
 	
 	float4 fragWaveOverlayClip(v2f IN) : COLOR
 	{ 
 	
-		float4 cp = tex2D(Ceto_Overlay_Clip, IN.uvtex);
+		float cp = tex2D(Ceto_Overlay_Clip, IN.uvtex).a;
 	
-		return cp.a;
+		return float4(cp, 0, 0, 0);
 	}
 	
 	ENDCG
@@ -193,7 +192,6 @@ Shader "Ceto/WaveOverlay"
     	
     	Pass 
     	{
-
 			ZTest Always Cull off ZWrite Off
       		Fog { Mode off }
       		
@@ -210,13 +208,12 @@ Shader "Ceto/WaveOverlay"
     	
     	Pass 
     	{
-			ZTest Always
-			Cull off
-			ZWrite Off
-			Fog { Mode off }
-
-			blend one one
+			ZTest Always Cull off ZWrite Off
+      		Fog { Mode off }
+      		
+      		blend one one
 			BlendOp add
+
 			CGPROGRAM
 			#pragma target 2.0
 			#pragma vertex vertWaveOverlay
@@ -243,7 +240,6 @@ Shader "Ceto/WaveOverlay"
 
 		Pass
 		{
-
 			ZTest Always Cull off ZWrite Off
 			Fog{ Mode off }
 
@@ -257,6 +253,7 @@ Shader "Ceto/WaveOverlay"
 			ENDCG
 
 		}
+    	
 	}
 }
 
