@@ -10,29 +10,29 @@ namespace Ceto.Common.Containers.Interpolation
     /// </summary>
 	public class InterpolatedArray2f : InterpolatedArray
     {
-
-		/// <summary>
-		/// Gets the data.
-		/// </summary>
-		public float[] Data { get { return m_data; } }
+        //OYM:  全部数据
+        /// <summary>
+        /// Gets the data.
+        /// </summary>
+        public float[] Data { get { return m_data; } }
 		float[] m_data;
-
-		/// <summary>
-		/// Size on the x dimension.
-		/// </summary>
-		public int SX { get { return m_sx; } }
+        //OYM:  是x点的维度吗
+        /// <summary>
+        /// Size on the x dimension.
+        /// </summary>
+        public int SX { get { return m_sx; } }
 		int m_sx;
-
-		/// <summary>
-		/// Size on the y dimension.
-		/// </summary>
-		public int SY { get { return m_sy; } }
+        //OYM:  y点的维度
+        /// <summary>
+        /// Size on the y dimension.
+        /// </summary>
+        public int SY { get { return m_sy; } }
 		int m_sy;
-
-		/// <summary>
-		/// Number of channels.
-		/// </summary>
-		public int Channels { get { return m_c; } }
+        //OYM:  频道数量
+        /// <summary>
+        /// Number of channels.
+        /// </summary>
+        public int Channels { get { return m_c; } }
 		int m_c;
 
 		public InterpolatedArray2f(int sx, int sy, int c, bool wrap) : base(wrap)

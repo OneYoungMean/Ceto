@@ -275,7 +275,7 @@ MonoBehaviour:
   textureFoam: 0
   foamMask: {fileID: 0}
   foamMaskAlpha: 1
-  clipMask: {fileID: 2800000, guid: a4f28b6fb67fb4658addf98ee532a7ac, type: 3}
+  clipMask: {fileID: 2800000, guid: f59401c5c79564fd1ae3bfb0876455a7, type: 3}
   width: 50
   height: 50
   offset: {x: 0, y: 0, z: 0}

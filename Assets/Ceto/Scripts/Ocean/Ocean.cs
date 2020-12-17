@@ -408,7 +408,7 @@ namespace Ceto
             {
                 T2S[1, i] = -T2S[1, i];
             }
-
+            //OYM:  这底下都是初始化
             Shader.SetGlobalMatrix("Ceto_T2S", T2S);
 
             //Zero these uniforms to something that wont cause a issue
@@ -454,10 +454,10 @@ namespace Ceto
 			//If there was a error you can not re-enable ocean.
 			if(WasError)
 				DisableOcean();
-
-			//Camera.onPreRender += OceanOnPreRender;
-			//Camera.onPreCull += OceanOnPreCull;
-			Camera.onPostRender += OceanOnPostRender;
+            //OYM:  这里和底下都是本来就被注释掉的
+            //Camera.onPreRender += OceanOnPreRender;
+            //Camera.onPreCull += OceanOnPreCull;
+            Camera.onPostRender += OceanOnPostRender;
 
         }
 

@@ -15,22 +15,22 @@ namespace Ceto
 
 		IList<InterpolatedArray2f[]> m_displacements;
 
-		public DisplacementBufferCPU(int size, Scheduler scheduler) : base(size, NUM_BUFFERS, scheduler)
+ 		public DisplacementBufferCPU(int size, Scheduler scheduler) : base(size, NUM_BUFFERS, scheduler)
 		{
 
-			int GRIDS = QueryDisplacements.GRIDS;
-			int CHANNELS = QueryDisplacements.CHANNELS;
+            int GRIDS = QueryDisplacements.GRIDS;//OYM:  4
+            int CHANNELS = QueryDisplacements.CHANNELS;//OYM:  3
 
-			m_displacements = new List<InterpolatedArray2f[]>(2);
+            m_displacements = new List<InterpolatedArray2f[]>(2); //OYM:  差值数组
 
-			m_displacements.Add( new InterpolatedArray2f[GRIDS] );
-			m_displacements.Add( new InterpolatedArray2f[GRIDS] );
+            m_displacements.Add(new InterpolatedArray2f[GRIDS]);//OYM:  你直接写后面它不好吗
+            m_displacements.Add( new InterpolatedArray2f[GRIDS] );
 
 			for (int i = 0; i < GRIDS; i++)
 			{
-				m_displacements[0][i] = new InterpolatedArray2f(size, size, CHANNELS, true);
-				m_displacements[1][i] = new InterpolatedArray2f(size, size, CHANNELS, true);
-			}
+                m_displacements[0][i] = new InterpolatedArray2f(size, size, CHANNELS, true); //OYM:  2*4一共八个,都是常数
+                m_displacements[1][i] = new InterpolatedArray2f(size, size, CHANNELS, true); //OYM:  
+            }
 
 		}
 

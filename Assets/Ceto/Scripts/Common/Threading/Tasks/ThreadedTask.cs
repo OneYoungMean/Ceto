@@ -107,19 +107,22 @@ namespace Ceto.Common.Threading.Tasks
         /// </summary>
         /// <param name="mainThread"> Can the task only be run on the main thread</param>
         /// <param name="key">The key to identify the task. Can be null</param>
-		protected ThreadedTask(bool isThreaded)
+        /// 
+        //OYM:  
+        protected ThreadedTask(bool isThreaded)
 		{
-            m_scheduler = null;
+
+			m_scheduler = null;
 			m_isThreaded = isThreaded;
 			m_listeners = new LinkedList<TaskListener>();
 			m_listener = new TaskListener(this);
 		}
 
-        /// <summary>
-        /// Starts the task. Used to initialize anything
-        /// that maybe needed before the task is run. 
-        /// Is always called from the main thread.
-        /// </summary>
+		/// <summary>
+		/// Starts the task. Used to initialize anything
+		/// that maybe needed before the task is run. 
+		/// Is always called from the main thread.
+		/// </summary>
 		public virtual void Start()
 		{
 			m_started = true;

@@ -103,15 +103,15 @@ namespace Ceto
 			try
 			{
 
-				//Needs at least SM3 for vertex texture fetches.
-				if (SystemInfo.graphicsShaderLevel < 30)
-					throw new InvalidOperationException("The projected grids needs at least SM3 to render.");
+                //Needs at least SM3 for vertex texture fetches.
+                if (SystemInfo.graphicsShaderLevel < 30)//OYM:  测试版本
+                    throw new InvalidOperationException("The projected grids needs at least SM3 to render.");
 
 			}
 			catch(Exception e)
 			{
-				Ocean.LogError(e.ToString());
-				WasError = true;
+                Ocean.LogError(e.ToString());//OYM:  hmmm什么东西会爆bug吧
+                WasError = true;
 				enabled = false;
 			}
 

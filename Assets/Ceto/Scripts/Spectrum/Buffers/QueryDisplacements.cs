@@ -7,8 +7,8 @@ using Ceto.Common.Threading.Tasks;
 
 namespace Ceto
 {
-	public static class QueryDisplacements
-	{
+    public static class QueryDisplacements //OYM:  静态类,我的天,这个是真正的大佬
+    {
 
 		public readonly static int CHANNELS = 3;
 		public readonly static int GRIDS = 4;
@@ -276,7 +276,6 @@ namespace Ceto
 			return result;
 			
 		}
-
 
 		public static void CopyAndCreateDisplacements(IList<InterpolatedArray2f> source, out IList<InterpolatedArray2f> des)
 		{

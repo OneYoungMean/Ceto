@@ -27,8 +27,8 @@ namespace Ceto
 	[AddComponentMenu("Ceto/Components/WaveSpectrum")]
 	[DisallowMultipleComponent]
 	[RequireComponent(typeof(Ocean))]
-	public class WaveSpectrum : OceanComponent
-	{
+    public class WaveSpectrum : OceanComponent  //OYM:  翻译过来是波谱
+    {
 
         //These settings have been moved to the SpectrumTask script
         //public const float WAVE_CM = 0.23f;	// Eq 59
@@ -304,13 +304,13 @@ namespace Ceto
         /// <summary>
         /// Required shaders that should be bound to the script.
         /// </summary>
-		[HideInInspector]
+		//[HideInInspector]
 		public Shader initSlopeSdr, initDisplacementSdr, initJacobianSdr, fourierSdr;
 
         /// <summary>
         /// Required shaders that should be bound to the script.
         /// </summary>
-		[HideInInspector]
+		//[HideInInspector]
 		public Shader slopeCopySdr, displacementCopySdr, foamCopySdr;
 
 		/// <summary>
@@ -326,13 +326,7 @@ namespace Ceto
 			{
 
 				//Zero all textures
-				Shader.SetGlobalTexture("Ceto_SlopeMap0", Texture2D.blackTexture);
-				Shader.SetGlobalTexture("Ceto_SlopeMap1", Texture2D.blackTexture);
-				Shader.SetGlobalTexture("Ceto_DisplacementMap0", Texture2D.blackTexture);
-				Shader.SetGlobalTexture("Ceto_DisplacementMap1", Texture2D.blackTexture);
-				Shader.SetGlobalTexture("Ceto_DisplacementMap2", Texture2D.blackTexture);
-				Shader.SetGlobalTexture("Ceto_DisplacementMap3", Texture2D.blackTexture);
-				Shader.SetGlobalTexture("Ceto_FoamMap0", Texture2D.blackTexture);
+				InitializeShader();
 
 				m_slopeCopyMat = new Material(slopeCopySdr);
 				m_displacementCopyMat = new Material(displacementCopySdr);
@@ -342,7 +336,7 @@ namespace Ceto
                 m_displacementInitMat = new Material(initDisplacementSdr);
                 m_foamInitMat = new Material(initJacobianSdr);
 
-                m_scheduler = new Scheduler();
+                m_scheduler = new Scheduler(); //OYM:  创建线程
 
                 CreateBuffers();
                 CreateRenderTextures();
@@ -359,7 +353,16 @@ namespace Ceto
 			}
 
 		}
-
+		static void InitializeShader()
+		{
+			Shader.SetGlobalTexture("Ceto_SlopeMap0", Texture2D.blackTexture);
+			Shader.SetGlobalTexture("Ceto_SlopeMap1", Texture2D.blackTexture);
+			Shader.SetGlobalTexture("Ceto_DisplacementMap0", Texture2D.blackTexture);
+			Shader.SetGlobalTexture("Ceto_DisplacementMap1", Texture2D.blackTexture);
+			Shader.SetGlobalTexture("Ceto_DisplacementMap2", Texture2D.blackTexture);
+			Shader.SetGlobalTexture("Ceto_DisplacementMap3", Texture2D.blackTexture);
+			Shader.SetGlobalTexture("Ceto_FoamMap0", Texture2D.blackTexture);
+		}
         protected override void OnDisable()
         {
             base.OnDisable();
@@ -990,7 +993,7 @@ namespace Ceto
             buffer.QueryWaves(query, m_queryScaling);
 
 		}
-
+        //OYM:  创建所有与缓冲区相关的数据,如果傅里叶设置更改了,缓冲区将会全部释放并重新创建
         /// <summary>
         /// Creates all the buffers and related data. 
         /// If fourier settings have changed the buffers
@@ -1000,24 +1003,24 @@ namespace Ceto
         {
             int size;
             bool isCpu;
-            GetFourierSize(out size, out isCpu);
+            GetFourierSize(out size, out isCpu); //OYM:  检查是否用gpu算与是否更改size
 
-            if (m_bufferSettings.beenCreated)
+            if (m_bufferSettings.beenCreated)//OYM:  检查是否以及创建好buff
             {
                 //buffers have already been created.
                 //Check to see if settings have changed.
 
                 if (m_bufferSettings.size == size &&
-                    m_bufferSettings.isCpu == isCpu)
+                    m_bufferSettings.isCpu == isCpu)//OYM:   检查buff是否相等
                 {
                     //settings have not changed.
                     return;
                 }
                 else
                 {
-					//Process all tasks until scheduler is empty.
-					while(m_scheduler.HasTasks())
-						UpdateSpectrumScheduler();
+                    //Process all tasks until scheduler is empty.
+                    while (m_scheduler.HasTasks()) //OYM:  创建了任务
+                        UpdateSpectrumScheduler();
 
                     //Settings changed and safe to recreate buffers.
                     //Clear everything and reset.
@@ -1371,10 +1374,10 @@ namespace Ceto
 				break;
 				
 			}
-			
-			bool supportDX11 = SystemInfo.graphicsShaderLevel >= 50 && SystemInfo.supportsComputeShaders;
-			
-			if(!isCpu && !disableReadBack && !supportDX11)
+
+            bool supportDX11 = SystemInfo.graphicsShaderLevel >= 50 && SystemInfo.supportsComputeShaders; //OYM:  允许computeshader
+
+            if(!isCpu && !disableReadBack && !supportDX11)
 			{
 				Ocean.LogWarning("You card does not support dx11. Fourier can not be GPU. Changing to CPU. Disable read backs to use GPU but with no height querys.");
 				fourierSize = FOURIER_SIZE.MEDIUM_64_CPU;

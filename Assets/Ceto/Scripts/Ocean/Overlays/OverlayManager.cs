@@ -760,7 +760,7 @@ namespace Ceto
         /// <summary>
         /// Create the overlay buffers for this camera at the required size.
         /// </summary>
-        public void CreateOverlays(Camera cam, WaveOverlayData overlay, OVERLAY_MAP_SIZE normalOverlaySize, OVERLAY_MAP_SIZE heightOverlaySize, OVERLAY_MAP_SIZE foamOverlaySize, OVERLAY_MAP_SIZE clipOverlaySize)
+        public void CreateOverlays(Camera cam, WaveOverlayData overlay, OVERLAY_MAP_SIZE normalOverlaySize, OVERLAY_MAP_SIZE heightOverlaySize, OVERLAY_MAP_SIZE foamOverlaySize, OVERLAY_MAP_SIZE clipOverlaySize) //OYM:  是这里吗
         {
             //If the manager has a overlay of this type then create the map it renders into
             if (HasNormalOverlay)

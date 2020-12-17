@@ -2,16 +2,19 @@ using System;
 
 namespace Ceto.Common.Containers.Interpolation
 {
-    /// <summary>
+	/// <summary>
 	/// Abstract class providing common functions for Interpolated array.
-    /// A filtered array allows the bilinear filtering of its contained data.
-    /// </summary>
+	/// A filtered array allows the bilinear filtering of its contained data.
+	/// </summary>
+	//OYM:  为插值数组提供通用功能的抽象类。过滤后的数组允许对其包含的数据进行双线性过滤。
+
 	public abstract class InterpolatedArray
     {
-        /// <summary>
-        /// Should the sampling of the array be wrapped or clamped.
-        /// </summary>
-        public bool Wrap { get { return m_wrap; } set { m_wrap = value; } }
+		/// <summary>
+		/// Should the sampling of the array be wrapped or clamped.
+		/// </summary>
+		//OYM:  阵列的采样是否应该缠绕或夹紧。
+		public bool Wrap { get { return m_wrap; } set { m_wrap = value; } }
         bool m_wrap;
 
         /// <summary>
@@ -20,10 +23,10 @@ namespace Ceto.Common.Containers.Interpolation
         /// </summary>
         public bool HalfPixelOffset { get; set; }
 
-		public InterpolatedArray(bool wrap)
+        public InterpolatedArray(bool wrap) //OYM:  默认是true.你就当这玩意是true就行
         {
             m_wrap = wrap;
-			HalfPixelOffset = true;
+            HalfPixelOffset = true; //OYM:  
         }
 
 		/// <summary>

@@ -95,15 +95,15 @@ namespace Ceto
 
 			m_fourier = new FourierCPU(size);
 
-            m_fourierTasks = new List<FourierTask>(3);
+            m_fourierTasks = new List<FourierTask>(3); //OYM:  一脸懵逼
             m_fourierTasks.Add(null);
             m_fourierTasks.Add(null);
             m_fourierTasks.Add(null);
 
-            m_scheduler = scheduler;
-			
-			for(int i = 0; i < numBuffers; i++)
-			{
+            m_scheduler = scheduler; //OYM:  处理器
+
+            for (int i = 0; i < numBuffers; i++) //OYM:  这个好像是个常数,总之就是给你三块缓存空间
+            {
 				m_buffers[i] = CreateBuffer(size);
 			}
 
@@ -115,19 +115,19 @@ namespace Ceto
         /// while the other is read from and then they swap.
         /// This is the read/write method (also know as ping/pong).
         /// </summary>
-		Buffer CreateBuffer(int size)
+        //OYM:  为此傅立叶大小创建一个缓冲区，一个缓冲区需要两个数组。
+        //OYM:  在FFT期间，一个数组被写入，而另一个数组则被读取，然后交换。这是读/写方法（也称为ping / pong）。
+        Buffer CreateBuffer(int size)
 		{
-
 			Buffer buffer = new Buffer();
-
-			buffer.doublePacked = true;
-			buffer.data = new List<Vector4[]>();
+            buffer.doublePacked = true; //OYM:  二次打包
+            buffer.data = new List<Vector4[]>();
 			buffer.data.Add(new Vector4[size * size]);
-			buffer.data.Add(new Vector4[size * size]);
+            buffer.data.Add(new Vector4[size * size]); //OYM:  两个超级大的数组
 
-			buffer.results = new Color[size * size];
+            buffer.results = new Color[size * size];//OYM:  这里面目前是空的
 
-			buffer.map = new Texture2D(size, size, TextureFormat.RGBAFloat, false, true);
+            buffer.map = new Texture2D(size, size, TextureFormat.RGBAFloat, false, true);
 			buffer.map.wrapMode = TextureWrapMode.Repeat;
 			buffer.map.filterMode = FilterMode.Bilinear;
 			buffer.map.hideFlags = HideFlags.HideAndDontSave;

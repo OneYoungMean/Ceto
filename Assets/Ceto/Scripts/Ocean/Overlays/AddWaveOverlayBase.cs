@@ -16,7 +16,7 @@ namespace Ceto
         /// <summary>
         /// A list of all the overlays created.
         /// </summary>
-        protected List<WaveOverlay> m_overlays = new List<WaveOverlay>();
+        protected List<WaveOverlay> m_overlays = new List<WaveOverlay>();//OYM:  所有海面的物体都会被存储到这里
 
         /// <summary>
         /// If multiple overlays are used allow enumeration.
@@ -72,12 +72,12 @@ namespace Ceto
         protected virtual void OnEnable()
         {
 
-            if (m_overlays != null)
+            if (m_overlays != null)//OYM: 避免关上
             {
                 //unhide all the overlays on enable.
                 for (int i = 0; i < m_overlays.Count; i++)
                 {
-                    m_overlays[i].Hide = false;
+                    m_overlays[i].Hide = false; 
                 }
             }
         }

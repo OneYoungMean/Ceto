@@ -27,23 +27,24 @@ namespace Ceto
 
         public FourierCPU(int size)
         {
-
-			if (!Mathf.IsPowerOfTwo(size))
+            //OYM:  cpu傅里叶变幻
+            if (!Mathf.IsPowerOfTwo(size))
 				throw new ArgumentException("Fourier grid size must be pow2 number");
 
             m_size = size;
             m_fsize = (float)m_size;
-            m_passes = (int)(Mathf.Log(m_fsize) / Mathf.Log(2.0f));
-            ComputeButterflyLookupTable();
+            m_passes = (int)(Mathf.Log(m_fsize) / Mathf.Log(2.0f)); //OYM:  计算底数2,这里也是快速傅里叶变幻?
+            ComputeButterflyLookupTable(); //OYM:  这里是蝶形算法
+                                           //OYM:  我晚点再来看这部分
         }
 
 
-        int BitReverse(int i)
-        {
+        static int BitReverse(int i,int size)
+        { //OYM:  总之就是比特翻转
             int j = i;
             int Sum = 0;
             int W = 1;
-            int M = m_size / 2;
+            int M = size / 2;
             while (M != 0)
             {
                 j = ((i & M) > M - 1) ? 1 : 0;
@@ -56,24 +57,24 @@ namespace Ceto
 
         void ComputeButterflyLookupTable()
         {
-			m_butterflyLookupTable = new LookUp[m_size * m_passes];
+            m_butterflyLookupTable = new LookUp[m_size * m_passes]; //OYM:  创建一个蝶形算法的通道映射
 
-            for (int i = 0; i < m_passes; i++)
+            for (int i = 0; i < m_passes; i++) //OYM:  对于每一个通道而言
             {
-                int nBlocks = (int)Mathf.Pow(2, m_passes - 1 - i);
-                int nHInputs = (int)Mathf.Pow(2, i);
+                int nBlocks = (int)Mathf.Pow(2, m_passes - 1 - i); //OYM:  区块位置?
+                int nHInputs = (int)Mathf.Pow(2, i); //OYM:  该区块的数量
 
                 for (int j = 0; j < nBlocks; j++)
                 {
                     for (int k = 0; k < nHInputs; k++)
                     {
                         int i1, i2, j1, j2;
-                        if (i == 0)
+                        if (i == 0) //OYM:  如果是零通道就翻转比特位
                         {
                             i1 = j * nHInputs * 2 + k;
                             i2 = j * nHInputs * 2 + nHInputs + k;
-                            j1 = BitReverse(i1);
-                            j2 = BitReverse(i2);
+                            j1 = BitReverse(i1,m_size);//OYM:  翻转比特
+                            j2 = BitReverse(i2,m_size);
                         }
                         else
                         {
@@ -83,7 +84,7 @@ namespace Ceto
                             j2 = i2;
                         }
 
-                        float wr = Mathf.Cos(2.0f * Mathf.PI * (float)(k * nBlocks) / m_fsize);
+                        float wr = Mathf.Cos(2.0f * Mathf.PI * (float)(k * nBlocks) / m_fsize); //OYM:  k是周期,fsize是总长度?
                         float wi = Mathf.Sin(2.0f * Mathf.PI * (float)(k * nBlocks) / m_fsize);
 
                         int offset1 = (i1 + i * m_size);
