@@ -558,6 +558,7 @@ namespace Ceto
 			RenderClipOverlays(data.clip);
 
             //If buffer has been created apply it to shaders
+            //OYM:  这里是渲染到海面上
             if (data.normal != null)
                 Shader.SetGlobalTexture("Ceto_Overlay_NormalMap", data.normal);
             else
