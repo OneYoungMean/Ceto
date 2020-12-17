@@ -551,8 +551,8 @@ namespace Ceto
 				}
 				
 			}
-
-			RenderHeightOverlays(data.height);
+            //OYM:  这一部分是处理renderer,计算坐标
+            RenderHeightOverlays(data.height);
 			RenderNormalOverlays(data.normal);
 			RenderFoamOverlays(data.foam);
 			RenderClipOverlays(data.clip);
@@ -574,7 +574,9 @@ namespace Ceto
                 Shader.SetGlobalTexture("Ceto_Overlay_FoamMap", Texture2D.blackTexture);
 
             if (data.clip != null)
+            {
                 Shader.SetGlobalTexture("Ceto_Overlay_ClipMap", data.clip);
+            }
             else
                 Shader.SetGlobalTexture("Ceto_Overlay_ClipMap", Texture2D.blackTexture);
 
@@ -710,6 +712,7 @@ namespace Ceto
 
 		void RenderClipOverlays(RenderTexture target)
 		{
+            
 			if(target == null) return;
 
             for (int i = 0; i < m_clipOverlays.Count; i++)
@@ -719,10 +722,12 @@ namespace Ceto
 
                 m_overlayMat.SetFloat("Ceto_Overlay_Alpha", Mathf.Max(0.0f, overlay.ClipTex.alpha));
 				m_overlayMat.SetTexture("Ceto_Overlay_Clip", (overlay.ClipTex.tex != null) ? overlay.ClipTex.tex : Texture2D.blackTexture);
-				
-				Blit(overlay.Corners, overlay.ClipTex.scaleUV, overlay.ClipTex.offsetUV, target, m_overlayMat, (int)OVERLAY_PASS.CLIP_ADD);
-			}
-		}
+
+                Blit(overlay.Corners, overlay.ClipTex.scaleUV, overlay.ClipTex.offsetUV, target, m_overlayMat, (int)OVERLAY_PASS.CLIP_ADD);//OYM:  处理材质?
+            }
+            
+
+        }
 
 		void Blit(Vector4[] corners, Vector2 scale, Vector2 offset, RenderTexture des, Material mat, int pass)
 		{
@@ -757,6 +762,8 @@ namespace Ceto
 
 		}
 
+
+        //OYM:  应该是这里了
         /// <summary>
         /// Create the overlay buffers for this camera at the required size.
         /// </summary>
@@ -796,7 +803,7 @@ namespace Ceto
 
             if (HasClipOverlay)
             {
-                RenderTextureFormat format = RenderTextureFormat.R8;
+                RenderTextureFormat format = RenderTextureFormat.R8; 
 
                 if (!SystemInfo.SupportsRenderTextureFormat(format))
                     format = RenderTextureFormat.RHalf;
@@ -804,7 +811,7 @@ namespace Ceto
                 if (!SystemInfo.SupportsRenderTextureFormat(format))
                     format = RenderTextureFormat.ARGB32;
 
-                CreateBuffer("Clip", cam, clipOverlaySize, format, true, ref overlay.clip);
+                CreateBuffer("Clip", cam, clipOverlaySize, format, true, ref overlay.clip); //OYM:  
             }
         }
 

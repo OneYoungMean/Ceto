@@ -102,7 +102,7 @@ half3 SlopeToWorldNormal(half2 slope)
 /*
 * Clips the ocean mesh if the value in the clip map is greater than 0.5.
 */
-void OceanClip(float4 st, float3 worldPos)
+void OceanClip(float4 st, float3 worldPos) //OYM£∫ ‘⁄’‚¿Ôclip
 {
 	clip(0.5 - saturate(tex2Dlod(Ceto_Overlay_ClipMap, st).r));
 }
