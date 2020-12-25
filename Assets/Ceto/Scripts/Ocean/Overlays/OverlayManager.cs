@@ -570,14 +570,18 @@ namespace Ceto
                 Shader.SetGlobalTexture("Ceto_Overlay_HeightMap", Texture2D.blackTexture);
 
             if (data.foam != null)
+            {
                 Shader.SetGlobalTexture("Ceto_Overlay_FoamMap", data.foam);
+                CetoTest.AddPicture(data.foam);
+            }
+
             else
                 Shader.SetGlobalTexture("Ceto_Overlay_FoamMap", Texture2D.blackTexture);
 
             if (data.clip != null)
             {
                 Shader.SetGlobalTexture("Ceto_Overlay_ClipMap", data.clip);
-                CetoTest.AddPicture(data.clip);
+                //CetoTest.AddPicture(data.clip);
             }
             else
                 Shader.SetGlobalTexture("Ceto_Overlay_ClipMap", Texture2D.blackTexture);

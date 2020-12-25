@@ -339,8 +339,8 @@ namespace Ceto
                 m_scheduler = new Scheduler(); //OYM:  创建线程
 
                 CreateBuffers(); //OYM:  创建各种缓冲
-                CreateRenderTextures(); 
-                CreateConditions();
+                CreateRenderTextures();  //OYM:  创建各种渲染材质
+                CreateConditions(); //OYM:  创建谱
 
                 UpdateQueryScaling();
 
@@ -1081,10 +1081,8 @@ namespace Ceto
 
 		}
 
-        void CreateMap(ref RenderTexture map, string name, RenderTextureFormat format, int size, int ansio)
+        void CreateMap(ref RenderTexture map, string name, RenderTextureFormat format, int size, int ansio) //OYM:  这里是创建RenderTexture的地方
         {
-
-
             if (map != null)
             {
                 if (!map.IsCreated()) map.Create();
@@ -1103,17 +1101,17 @@ namespace Ceto
         }
 
         /// <summary>
-        /// Creates the spectrum for a given set of conditions. 
+        /// Creates the spectrum for a given set of conditions.  
         /// </summary>
-        void CreateConditions()
-		{
+        void CreateConditions() //OYM:  通过给定的条件创建频谱
+        {
 
-            int size = m_bufferSettings.size;
-        
-            var key = NewSpectrumConditionKey(size, windSpeed, m_ocean.windDir, waveAge);
+            int size = m_bufferSettings.size; //OYM:  还是64
 
-			//If condition 0 is null this is start up or buffers have been recreated.
-			if(m_conditions[0] == null)
+            WaveSpectrumConditionKey key = NewSpectrumConditionKey(size, windSpeed, m_ocean.windDir, waveAge); //OYM:  根据各种属性创建参数
+
+            //If condition 0 is null this is start up or buffers have been recreated.
+            if(m_conditions[0] == null)
 			{
                 if (m_conditionCache.ContainsKey(key))
                 {
@@ -1284,15 +1282,15 @@ namespace Ceto
             switch (spectrumType)
             {
                 case SPECTRUM_TYPE.UNIFIED:
-                    key = new UnifiedSpectrumConditionKey(windSpeed, waveAge, fourierSize, windDir, spectrumType, numberOfGrids);
+                    key = new UnifiedSpectrumConditionKey(windSpeed, waveAge, fourierSize, windDir, spectrumType, numberOfGrids); //OYM:  统一的
                     break;
 
                 case SPECTRUM_TYPE.UNIFIED_PHILLIPS:
-                    key = new UnifiedSpectrumConditionKey(windSpeed, waveAge, fourierSize, windDir, spectrumType, numberOfGrids);
+                    key = new UnifiedSpectrumConditionKey(windSpeed, waveAge, fourierSize, windDir, spectrumType, numberOfGrids);//OYM:  这和上面有区别吗
                     break;
 
                 case SPECTRUM_TYPE.PHILLIPS:;
-                    key = new PhillipsSpectrumConditionKey(windSpeed, fourierSize, windDir, spectrumType, numberOfGrids);
+                    key = new PhillipsSpectrumConditionKey(windSpeed, fourierSize, windDir, spectrumType, numberOfGrids); //OYM:  这应该是另外一种算法了
                     break;
 
                 case SPECTRUM_TYPE.CUSTOM:

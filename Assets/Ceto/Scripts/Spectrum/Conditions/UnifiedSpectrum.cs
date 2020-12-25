@@ -14,8 +14,8 @@ namespace Ceto
     /// Journal of Geophysical Research vol 102, p781-796, 1997
     /// 
     /// </summary>
-	public class UnifiedSpectrum : ISpectrum
-	{
+	public class UnifiedSpectrum : ISpectrum //OYM:  这是一篇论文里面的代码生成的频谱
+    {
 
         readonly float GRAVITY = SpectrumTask.GRAVITY;
         readonly float WAVE_CM = SpectrumTask.WAVE_CM;

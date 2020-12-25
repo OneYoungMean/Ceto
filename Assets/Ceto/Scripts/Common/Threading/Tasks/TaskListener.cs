@@ -31,8 +31,8 @@ namespace Ceto.Common.Threading.Tasks
         /// Create a new listener.
         /// </summary>
         /// <param name="task">The task that is listening.</param>
-		public TaskListener(ThreadedTask task)
-		{
+		public TaskListener(ThreadedTask task) //OYM:  封装一下task.作为监听器?
+        {
 			m_task = task;
 		}
 

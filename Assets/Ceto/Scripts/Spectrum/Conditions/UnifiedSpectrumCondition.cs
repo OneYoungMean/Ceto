@@ -49,9 +49,11 @@ namespace Ceto
 
             UnifiedSpectrumConditionKey key = Key as UnifiedSpectrumConditionKey;
 
-            UnifiedSpectrum uspectrum = new UnifiedSpectrum(key.WindSpeed, key.WindDir, key.WaveAge);
+            UnifiedSpectrum uspectrum = new UnifiedSpectrum(key.WindSpeed, key.WindDir, key.WaveAge);//OYM:  这里是一个统一的波纹发生器
 
-            return new SpectrumTask(this, true, new ISpectrum[] { uspectrum, uspectrum, uspectrum, uspectrum });
+            return new SpectrumTask(this, true,
+                new ISpectrum[] { uspectrum, uspectrum, uspectrum, uspectrum }  //OYM:  噗   
+                );
         }
 
     }

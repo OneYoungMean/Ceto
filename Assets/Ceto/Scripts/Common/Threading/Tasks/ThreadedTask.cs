@@ -11,15 +11,15 @@ namespace Ceto.Common.Threading.Tasks
 	public abstract class ThreadedTask : IThreadedTask, ICancelToken
 	{
 
-		/// <summary>
-		/// How long the task took to run in milliseconds.
-		/// </summary>
-		public float RunTime { get; set; }
+        /// <summary>
+        /// How long the task took to run in milliseconds.
+        /// </summary>
+        public float RunTime { get; set; } //OYM:  这个task跑了多久
 
         /// <summary>
         /// True if this task must be run on the main thread.
         /// </summary>
-		public bool IsThreaded { get { return m_isThreaded; } }
+		public bool IsThreaded { get { return m_isThreaded; } } //OYM:  如果在主线程,返回true
         readonly bool m_isThreaded;
 
 		/// <summary>
@@ -27,22 +27,22 @@ namespace Ceto.Common.Threading.Tasks
 		/// Should be set to true in the tasks end function.
 		/// </summary>
 		public bool Done { get { return m_done; } }
-		volatile bool m_done;
+        volatile bool m_done;//OYM:  完成
 
         /// <summary>
         /// True if the task is finished.
         /// Should be set to true in the tasks run function.
         /// </summary>
-        public bool Ran { get { return m_ran; } }
-        volatile bool m_ran;
- 
-		/// <summary>
-		/// Set to true to skip the end function. 
-		/// This will immediately trigger any tasks
-		/// waiting on this one to stop waiting.
-		/// </summary>
-		public bool NoFinish 
-		{ 
+        public bool Ran { get { return m_ran; } } //OYM:  如果已经完成,则返回true
+        volatile bool m_ran; //OYM:  第一次见到volatile
+
+        /// <summary>
+        /// Set to true to skip the end function. 
+        /// This will immediately trigger any tasks
+        /// waiting on this one to stop waiting.
+        /// </summary>
+        public bool NoFinish  //OYM:  如果为true,则
+        { 
 			get { return  m_noFinish; }  
 			set { m_noFinish = value; } 
 		}
@@ -51,13 +51,13 @@ namespace Ceto.Common.Threading.Tasks
         /// <summary>
         /// Is the task waiting on another task to finish.
         /// </summary>
-        public bool Waiting { get { return m_listener.Waiting > 0; } }
+        public bool Waiting { get { return m_listener.Waiting > 0; } } //OYM:  这个task是否等待其他任务完成
 
-		/// <summary>
-		/// True if the tasks runs immediately after stop wait 
-		/// or gets queued as a scheduled task.
-		/// </summary>
-		public bool RunOnStopWaiting 
+        /// <summary>
+        /// True if the tasks runs immediately after stop wait 
+        /// or gets queued as a scheduled task.
+        /// </summary>
+        public bool RunOnStopWaiting 
 		{ 
 			get { return  m_runOnStopWaiting; }  
 			set { m_runOnStopWaiting = value; } 
@@ -87,8 +87,8 @@ namespace Ceto.Common.Threading.Tasks
         /// A list of task listeners that are waiting 
         /// on this task to finish running.
         /// </summary>
-        protected LinkedList<TaskListener> Listeners { get { return m_listeners; } }
-		LinkedList<TaskListener> m_listeners;
+        protected LinkedList<TaskListener> Listeners { get { return m_listeners; } } //OYM:  获取任务链
+        LinkedList<TaskListener> m_listeners;
 
         /// <summary>
         /// The listener for this task that can listen on another 
@@ -112,10 +112,10 @@ namespace Ceto.Common.Threading.Tasks
         protected ThreadedTask(bool isThreaded)
 		{
 
-			m_scheduler = null;
-			m_isThreaded = isThreaded;
-			m_listeners = new LinkedList<TaskListener>();
-			m_listener = new TaskListener(this);
+            m_scheduler = null; //OYM:  目前还没有scheduler
+            m_isThreaded = isThreaded; //OYM:  目前是true
+            m_listeners = new LinkedList<TaskListener>(); //OYM:  监听器,以及为啥这里用的是链表,链表线程安全吗?
+            m_listener = new TaskListener(this);
 		}
 
 		/// <summary>

@@ -55,20 +55,20 @@ namespace Ceto
             Size = condition.Key.Size;
             GridSizes = condition.GridSizes;
             WaveAmps = condition.WaveAmps;
-            NumGrids = condition.Key.NumGrids;
+            NumGrids = condition.Key.NumGrids; //OYM:  这里
 
-            m_rnd = new System.Random(0);
-            m_distibution = SPECTRUM_DISTRIBUTION.LINEAR;
+            m_rnd = new System.Random(0); //OYM:  创建一个random
+            m_distibution = SPECTRUM_DISTRIBUTION.LINEAR; //OYM:  分配模式
 
-            float factor = 2.0f * Mathf.PI * Size;
+            float factor = 2.0f * Mathf.PI * Size;//OYM:  工厂?
             InverseGridSizes = new Vector4(factor / GridSizes.x, factor / GridSizes.y, factor / GridSizes.z, factor / GridSizes.w);
 
-            m_spectrum01 = new Color[Size * Size];
+            m_spectrum01 = new Color[Size * Size]; //OYM:  一个color数组
 
             if(NumGrids > 2)
-                m_spectrum23 = new Color[Size * Size];
+                m_spectrum23 = new Color[Size * Size]; //OYM:  又一个?
 
-            m_wtable = new Color[Size * Size];
+            m_wtable = new Color[Size * Size]; //OYM:  这一堆玩意没写注释
 
         }
 
@@ -108,28 +108,27 @@ namespace Ceto
         public override void Start()
         {
 
-            base.Start();
+            base.Start(); //OYM:  这里面就设定一个bool
 
-            Condition.CreateTextures();
+            Condition.CreateTextures(); //OYM:  发生器创建材质
 
-            Condition.Done = false;
+            Condition.Done = false; //OYM:  关闭完成
 
         }
 
         public override IEnumerator Run()
         {
+            //OYM:  这里看了会夭寿,我决定晚点来看
+            CreateWTable(); //OYM:  啊我死了
+            GenerateWavesSpectrum(); //OYM:  啊我又死了
 
-            CreateWTable();
-            GenerateWavesSpectrum();
-
-            FinishedRunning();
+            FinishedRunning(); //OYM:  鞭尸
 
             return null;
         }
 
         public override void End()
         {
-
             base.End();
 
             Condition.Apply(m_spectrum01, m_spectrum23, m_wtable);
@@ -258,7 +257,7 @@ namespace Ceto
             int grids = NumGrids;
 
             Vector4 inverseGridSizes2;
-            inverseGridSizes2.x = InverseGridSizes.x * InverseGridSizes.x;
+            inverseGridSizes2.x = InverseGridSizes.x * InverseGridSizes.x; //OYM:  ??? 傅里叶变幻?
             inverseGridSizes2.y = InverseGridSizes.y * InverseGridSizes.y;
             inverseGridSizes2.z = InverseGridSizes.z * InverseGridSizes.z;
             inverseGridSizes2.w = InverseGridSizes.w * InverseGridSizes.w;
