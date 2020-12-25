@@ -244,14 +244,14 @@ namespace Ceto
         /// the displacement, slope or jacobian data. Can run on the CPU or GPU
         /// depending on the parent class type. 
         /// </summary>
-		WaveSpectrumBuffer m_displacementBuffer, m_slopeBuffer, m_jacobianBuffer;
+		WaveSpectrumBuffer m_displacementBuffer, m_slopeBuffer, m_jacobianBuffer; //OYM:  用于将频谱转换为位移,坡度与雅克比数据,取决于父类的类型
 
-		/// <summary>
-		/// Used to find the max range of the displacements.
-		/// For larger fourier sizes this can take a while so 
-		/// use a threaded task.
-		/// </summary>
-		FindRangeTask m_findRangeTask;
+        /// <summary>
+        /// Used to find the max range of the displacements.
+        /// For larger fourier sizes this can take a while so 
+        /// use a threaded task.
+        /// </summary>
+        FindRangeTask m_findRangeTask;
 
 		/// <summary>
 		/// The used to read data back from the GPU.
@@ -338,8 +338,8 @@ namespace Ceto
 
                 m_scheduler = new Scheduler(); //OYM:  创建线程
 
-                CreateBuffers();
-                CreateRenderTextures();
+                CreateBuffers(); //OYM:  创建各种缓冲
+                CreateRenderTextures(); 
                 CreateConditions();
 
                 UpdateQueryScaling();
@@ -1038,17 +1038,17 @@ namespace Ceto
             else
                 m_displacementBuffer = new DisplacementBufferGPU(size, fourierSdr);
 
-            m_slopeBuffer = new WaveSpectrumBufferGPU(size, fourierSdr, 2);
-            m_jacobianBuffer = new WaveSpectrumBufferGPU(size, fourierSdr, 3);
+            m_slopeBuffer = new WaveSpectrumBufferGPU(size, fourierSdr, 2); //OYM:  滑坡数据缓冲区
+            m_jacobianBuffer = new WaveSpectrumBufferGPU(size, fourierSdr, 3); //OYM:  雅克比数据缓冲区,比slope多一个Buffer
 
-            m_readBuffer = new ComputeBuffer(size * size, sizeof(float) * 3);
+            m_readBuffer = new ComputeBuffer(size * size, sizeof(float) * 3); //OYM:  从GPU里面读取数据,后面两个分别是Buffer大小和指针大小
 
-            m_conditions = new WaveSpectrumCondition[2];
-            m_displacementMaps = new RenderTexture[4];
-            m_slopeMaps = new RenderTexture[2];
-            m_foamMaps = new RenderTexture[1];
+            m_conditions = new WaveSpectrumCondition[2]; //OYM:  波谱发生器
+            m_displacementMaps = new RenderTexture[4]; //OYM:  位移贴图?
+            m_slopeMaps = new RenderTexture[2]; //OYM:  这里的slope到底指什么啊...
+            m_foamMaps = new RenderTexture[1]; //OYM:  浮沫贴图
 
-            m_bufferSettings.beenCreated = true;
+            m_bufferSettings.beenCreated = true; //OYM:  数值设定
             m_bufferSettings.size = size;
             m_bufferSettings.isCpu = isCpu;
 
@@ -1060,14 +1060,14 @@ namespace Ceto
 		void CreateRenderTextures()
 		{
 
-            int size = m_bufferSettings.size;
-			int aniso = 9;
+            int size = m_bufferSettings.size; //OYM:  64
+            int aniso = 9; //OYM:  这里是各向异性?
 
-			//Must be float as some ATI cards will not render 
-			//these textures correctly if format is half.
-			RenderTextureFormat format = RenderTextureFormat.ARGBFloat;
+            //Must be float as some ATI cards will not render 
+            //these textures correctly if format is half.
+            RenderTextureFormat format = RenderTextureFormat.ARGBFloat; //OYM:  测试之后发现可能有一部分的显卡不正确
 
-			for(int i = 0; i < m_displacementMaps.Length; i++) {
+            for(int i = 0; i < m_displacementMaps.Length; i++) {
 				CreateMap(ref m_displacementMaps[i], "Displacement", format, size, aniso);
 			}
 

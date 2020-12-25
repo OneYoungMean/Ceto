@@ -12,12 +12,13 @@ namespace Ceto
 
 		struct LookUp
 		{
-			public int j1, j2;
-			public float wr, wi;
-		}
+			public int originX, originY;
+			public int targetX, targetY;
+            public float wr, wi; //OYM:  实部与虚部
+        }
 
-		public int size { get { return m_size; } }
-		int m_size;
+		public int size { get { return m_passSize; } }
+		int m_passSize;
 		float m_fsize;
 		
 		public int passes { get { return m_passes; } }
@@ -31,8 +32,8 @@ namespace Ceto
             if (!Mathf.IsPowerOfTwo(size))
 				throw new ArgumentException("Fourier grid size must be pow2 number");
 
-            m_size = size;
-            m_fsize = (float)m_size;
+            m_passSize = size;
+            m_fsize = (float)m_passSize;
             m_passes = (int)(Mathf.Log(m_fsize) / Mathf.Log(2.0f)); //OYM:  计算底数2,这里也是快速傅里叶变幻?
             ComputeButterflyLookupTable(); //OYM:  这里是蝶形算法
                                            //OYM:  我晚点再来看这部分
@@ -47,55 +48,61 @@ namespace Ceto
             int M = size / 2;
             while (M != 0)
             {
-                j = ((i & M) > M - 1) ? 1 : 0;
+                j = ((i & M) > M - 1) ? 1 : 0;//OYM:  这个地方写的和坨稀一样,写个I&M>0不好吗
                 Sum += j * W;
                 W *= 2;
                 M /= 2;
             }
-            return Sum;
+			return Sum;
         }
-
+        //OYM:  这种核心代码不写注释的真的操蛋
         void ComputeButterflyLookupTable()
         {
-            m_butterflyLookupTable = new LookUp[m_size * m_passes]; //OYM:  创建一个蝶形算法的通道映射
+            m_butterflyLookupTable = new LookUp[m_passSize * m_passes]; //OYM:  创建一个蝶形算法的通道映射
+			int chunkSize = m_passSize;
 
-            for (int i = 0; i < m_passes; i++) //OYM:  对于每一个通道而言
+			for (int passIndex = 0; passIndex < m_passes; passIndex++) //OYM:  对于每一个通道而言
             {
-                int nBlocks = (int)Mathf.Pow(2, m_passes - 1 - i); //OYM:  区块位置?
-                int nHInputs = (int)Mathf.Pow(2, i); //OYM:  该区块的数量
+                int lengthX = (int)Mathf.Pow(2, m_passes - 1 - passIndex); //OYM:  区块位置?
+                int lengthY = (int)Mathf.Pow(2, passIndex); //OYM:  该区块的数量
 
-                for (int j = 0; j < nBlocks; j++)
+                for (int X = 0; X < lengthX; X++)
                 {
-                    for (int k = 0; k < nHInputs; k++)
+                    for (int Y = 0; Y < lengthY; Y++)
                     {
-                        int i1, i2, j1, j2;
-                        if (i == 0) //OYM:  如果是零通道就翻转比特位
+                        int iX, iY, jX, jY;
+                        if (passIndex == 0) //OYM:  如果是零通道就翻转比特位
                         {
-                            i1 = j * nHInputs * 2 + k;
-                            i2 = j * nHInputs * 2 + nHInputs + k;
-                            j1 = BitReverse(i1,m_size);//OYM:  翻转比特
-                            j2 = BitReverse(i2,m_size);
+                            iX = X * lengthY * 2 + Y;
+                            iY = X * lengthY * 2 + lengthY + Y;
+                            jX = BitReverse(iX,m_passSize);//OYM:  翻转比特
+                            jY = BitReverse(iY,m_passSize);
                         }
                         else
                         {
-                            i1 = j * nHInputs * 2 + k;
-                            i2 = j * nHInputs * 2 + nHInputs + k;
-                            j1 = i1;
-                            j2 = i2;
+                            iX = X * lengthY * 2 + Y;
+                            iY = X * lengthY * 2 + lengthY + Y;
+                            jX = iX;
+                            jY = iY;
                         }
 
-                        float wr = Mathf.Cos(2.0f * Mathf.PI * (float)(k * nBlocks) / m_fsize); //OYM:  k是周期,fsize是总长度?
-                        float wi = Mathf.Sin(2.0f * Mathf.PI * (float)(k * nBlocks) / m_fsize);
+                        float wr = Mathf.Cos(2.0f * Mathf.PI * (float)(Y * lengthX) / m_fsize); //OYM:  lengthX是步长,fsize是周期?
+						float wi = Mathf.Sin(2.0f * Mathf.PI * (float)(Y * lengthX) / m_fsize);
 
-                        int offset1 = (i1 + i * m_size);
-                        m_butterflyLookupTable[offset1].j1 = j1;
-                        m_butterflyLookupTable[offset1].j2 = j2;
+                        int offset1 = (iX + passIndex * m_passSize); //OYM:  写入的位置,注意Y的坐标跟X差了lengthY
+						m_butterflyLookupTable[offset1].originX = iX;
+						m_butterflyLookupTable[offset1].originY = -1;
+						m_butterflyLookupTable[offset1].targetX = jX;
+                        m_butterflyLookupTable[offset1].targetY = jY;
                         m_butterflyLookupTable[offset1].wr = wr;
                         m_butterflyLookupTable[offset1].wi = wi;
 
-                        int offset2 = (i2 + i * m_size);
-                        m_butterflyLookupTable[offset2].j1 = j1;
-                        m_butterflyLookupTable[offset2].j2 = j2;
+                        int offset2 = (iY + passIndex * m_passSize);
+
+						m_butterflyLookupTable[offset2].originX = -1;
+						m_butterflyLookupTable[offset2].originY = iY;
+						m_butterflyLookupTable[offset2].targetX = jX;
+                        m_butterflyLookupTable[offset2].targetY = jY;
                         m_butterflyLookupTable[offset2].wr = -wr;
                         m_butterflyLookupTable[offset2].wi = -wi;
 
@@ -124,8 +131,8 @@ namespace Ceto
             return input1;
         }
 
-		public int PeformFFT_SinglePacked(int startIdx, IList<Vector4[]> data0, ICancelToken token)
-		{
+        public int PeformFFT_SinglePacked(int startIdx, IList<Vector4[]> data0, ICancelToken token) //OYM:  包装
+        {
 			
 			int x; int y; int i;
 			int idx = 0; int idx1; int bftIdx;
@@ -144,23 +151,23 @@ namespace Ceto
 
 				Vector4[] read0 = data0[idx1];
 				
-				si = i * m_size;
+				si = i * m_passSize;
 				
-				for (x = 0; x < m_size; x++)
+				for (x = 0; x < m_passSize; x++)
 				{
 					
 					bftIdx = x + si;
 					
-					X = m_butterflyLookupTable[bftIdx].j1;
-					Y = m_butterflyLookupTable[bftIdx].j2;
+					X = m_butterflyLookupTable[bftIdx].targetX;
+					Y = m_butterflyLookupTable[bftIdx].targetY;
 					wx = m_butterflyLookupTable[bftIdx].wr;
 					wy = m_butterflyLookupTable[bftIdx].wi;
 					
-					for (y = 0; y < m_size; y++)
+					for (y = 0; y < m_passSize; y++)
 					{
                         if (token.Cancelled) return -1;
 
-						sy = y * m_size;
+						sy = y * m_passSize;
 						
 						ii = x + sy;
 						xi = X + sy;
@@ -182,23 +189,23 @@ namespace Ceto
 				
 				Vector4[] read0 = data0[idx1];
 				
-				si = i * m_size;
+				si = i * m_passSize;
 				
-				for (y = 0; y < m_size; y++)
+				for (y = 0; y < m_passSize; y++)
 				{
 					
 					bftIdx = y + si;
 					
-					X = m_butterflyLookupTable[bftIdx].j1 * m_size;
-					Y = m_butterflyLookupTable[bftIdx].j2 * m_size;
+					X = m_butterflyLookupTable[bftIdx].targetX * m_passSize;
+					Y = m_butterflyLookupTable[bftIdx].targetY * m_passSize;
 					wx = m_butterflyLookupTable[bftIdx].wr;
 					wy = m_butterflyLookupTable[bftIdx].wi;
 					
-					for (x = 0; x < m_size; x++)
+					for (x = 0; x < m_passSize; x++)
 					{
                         if (token.Cancelled) return -1;
 
-                        ii = x + y * m_size;
+                        ii = x + y * m_passSize;
 						xi = x + X;
 						yi = x + Y;
 
@@ -211,8 +218,8 @@ namespace Ceto
 			return idx;
 		}
 
-		public int PeformFFT_DoublePacked(int startIdx, IList<Vector4[]> data0, ICancelToken token)
-		{
+        public int PeformFFT_DoublePacked(int startIdx, IList<Vector4[]> data0, ICancelToken token) //OYM:  二次封装?
+        {
 
 			int x; int y; int i;
 			int idx = 0; int idx1; int bftIdx;
@@ -231,23 +238,23 @@ namespace Ceto
 
 				Vector4[] read0 = data0[idx1];
 
-				si = i * m_size;
+				si = i * m_passSize;
 
-				for (x = 0; x < m_size; x++)
+				for (x = 0; x < m_passSize; x++)
 				{
 
 					bftIdx = x + si;
 					
-					X = m_butterflyLookupTable[bftIdx].j1;
-					Y = m_butterflyLookupTable[bftIdx].j2;
+					X = m_butterflyLookupTable[bftIdx].targetX;
+					Y = m_butterflyLookupTable[bftIdx].targetY;
 					wx = m_butterflyLookupTable[bftIdx].wr;
 					wy = m_butterflyLookupTable[bftIdx].wi;
 
-					for (y = 0; y < m_size; y++)
+					for (y = 0; y < m_passSize; y++)
 					{
                         if (token.Cancelled) return -1;
 
-                        sy = y * m_size;
+                        sy = y * m_passSize;
 
 						ii = x + sy;
 						xi = X + sy;
@@ -272,23 +279,23 @@ namespace Ceto
 
 				Vector4[] read0 = data0[idx1];
 
-				si = i * m_size;
+				si = i * m_passSize;
 
-				for (y = 0; y < m_size; y++)
+				for (y = 0; y < m_passSize; y++)
 				{
 
 					bftIdx = y + si;
 					
-					X = m_butterflyLookupTable[bftIdx].j1 * m_size;
-					Y = m_butterflyLookupTable[bftIdx].j2 * m_size;
+					X = m_butterflyLookupTable[bftIdx].targetX * m_passSize;
+					Y = m_butterflyLookupTable[bftIdx].targetY * m_passSize;
 					wx = m_butterflyLookupTable[bftIdx].wr;
 					wy = m_butterflyLookupTable[bftIdx].wi;
 
-					for (x = 0; x < m_size; x++)
+					for (x = 0; x < m_passSize; x++)
 					{
                         if (token.Cancelled) return -1;
 
-                        ii = x + y * m_size;
+                        ii = x + y * m_passSize;
 						xi = x + X;
 						yi = x + Y;
 
@@ -648,9 +655,22 @@ namespace Ceto
 }
 
 
+/*
+ 			int test_sum = 0;
+			size = size / 2;
 
+			while (size != 0)
+			{
+				if (i % 2 == 1)
+				{
+					test_sum += i * size;
+				}
+				i /= 2;
+				size /= 2;
 
-
+			}
+			bool isSame = test_sum == Sum;
+ */
 
 
 

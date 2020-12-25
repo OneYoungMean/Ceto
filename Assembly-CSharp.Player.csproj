@@ -619,6 +619,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Ceto\Scripts\CetoTest.cs" />
     <Compile Include="Assets\Ceto\Scripts\Common\Interpolation\InterpolatedArray.cs" />
     <Compile Include="Assets\Ceto\Scripts\Common\Interpolation\InterpolatedArray2f.cs" />
     <Compile Include="Assets\Ceto\Scripts\Common\Queues\DictionaryQueue.cs" />

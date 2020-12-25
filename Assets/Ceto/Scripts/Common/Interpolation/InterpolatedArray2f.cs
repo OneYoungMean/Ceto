@@ -20,48 +20,48 @@ namespace Ceto.Common.Containers.Interpolation
         /// <summary>
         /// Size on the x dimension.
         /// </summary>
-        public int SX { get { return m_sx; } }
-		int m_sx;
+        public int SX { get { return m_sizeX; } }
+		int m_sizeX;
         //OYM:  y点的维度
         /// <summary>
         /// Size on the y dimension.
         /// </summary>
-        public int SY { get { return m_sy; } }
-		int m_sy;
+        public int SY { get { return m_sizeY; } }
+		int m_sizeY;
         //OYM:  频道数量
         /// <summary>
         /// Number of channels.
         /// </summary>
-        public int Channels { get { return m_c; } }
-		int m_c;
+        public int Channels { get { return m_channels; } }
+		int m_channels;
 
-		public InterpolatedArray2f(int sx, int sy, int c, bool wrap) : base(wrap)
+        public InterpolatedArray2f(int sx, int sy, int c, bool wrap) : base(wrap) //OYM:  
         {
-			m_sx = sx;
-			m_sy = sy;
-			m_c = c;
+			m_sizeX = sx;
+			m_sizeY = sy;
+			m_channels = c;
 
-			m_data = new float[m_sx * m_sy * m_c];
+            m_data = new float[m_sizeX * m_sizeY * m_channels]; //OYM:  一个超级大的采样数组
         }
 
 		public InterpolatedArray2f(float[] data, int sx, int sy, int c, bool wrap) : base(wrap)
 		{
-			m_sx = sx;
-			m_sy = sy;
-			m_c = c;
+			m_sizeX = sx;
+			m_sizeY = sy;
+			m_channels = c;
 
-			m_data = new float[m_sx * m_sy * m_c];
+			m_data = new float[m_sizeX * m_sizeY * m_channels];
 
             Copy(data);
 		}
 
 		public InterpolatedArray2f(float[,,] data, bool wrap) : base(wrap)
         {
-			m_sx = data.GetLength(0);
-			m_sy = data.GetLength(1);
-			m_c = data.GetLength(2);
+			m_sizeX = data.GetLength(0);
+			m_sizeY = data.GetLength(1);
+			m_channels = data.GetLength(2);
 
-			m_data = new float[m_sx * m_sy * m_c];
+			m_data = new float[m_sizeX * m_sizeY * m_channels];
 
             Copy(data);
         }
@@ -88,10 +88,10 @@ namespace Ceto.Common.Containers.Interpolation
 		public float this[int x, int y, int c]
         {
             get{
-				return m_data[(x + y * m_sx) * m_c + c];
+				return m_data[(x + y * m_sizeX) * m_channels + c];
             }
             set{
-				m_data[(x + y * m_sx) * m_c + c] = value;
+				m_data[(x + y * m_sizeX) * m_channels + c] = value;
             }
         }
 
@@ -100,7 +100,7 @@ namespace Ceto.Common.Containers.Interpolation
         /// </summary>
         public float Get(int x, int y, int c)
         {
-            return m_data[(x + y * m_sx) * m_c + c];
+            return m_data[(x + y * m_sizeX) * m_channels + c];
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace Ceto.Common.Containers.Interpolation
         /// </summary>
         public void Set(int x, int y, int c, float v)
         {
-            m_data[(x + y * m_sx) * m_c + c] = v;
+            m_data[(x + y * m_sizeX) * m_channels + c] = v;
         }
 
 		/// <summary>
@@ -116,8 +116,8 @@ namespace Ceto.Common.Containers.Interpolation
 		/// </summary>
 		public void Set(int x, int y, float[] v)
 		{
-			for(int c = 0; c < m_c; c++)
-				m_data[(x + y * m_sx) * m_c + c] = v[c];
+			for(int c = 0; c < m_channels; c++)
+				m_data[(x + y * m_sizeX) * m_channels + c] = v[c];
 		}
 		
 		/// <summary>
@@ -125,8 +125,8 @@ namespace Ceto.Common.Containers.Interpolation
 		/// </summary>
 		public void Get(int x, int y, float[] v)
 		{
-			for(int c = 0; c < m_c; c++)
-				v[c] = m_data[(x + y * m_sx) * m_c + c];
+			for(int c = 0; c < m_channels; c++)
+				v[c] = m_data[(x + y * m_sizeX) * m_channels + c];
 		}
 
         /// <summary>
@@ -138,30 +138,30 @@ namespace Ceto.Common.Containers.Interpolation
             //un-normalize cords
             if (HalfPixelOffset)
             {
-                x *= (float)m_sx;
-                y *= (float)m_sy;
+                x *= (float)m_sizeX;
+                y *= (float)m_sizeY;
 
                 x -= 0.5f;
                 y -= 0.5f;
             }
             else
             {
-                x *= (float)(m_sx - 1);
-                y *= (float)(m_sy - 1);
+                x *= (float)(m_sizeX - 1);
+                y *= (float)(m_sizeY - 1);
             }
 
 			int x0, x1;
 			float fx = Math.Abs(x - (int)x);
-			Index(x, m_sx, out x0, out x1);
+			Index(x, m_sizeX, out x0, out x1);
 			
 			int y0, y1;
 			float fy = Math.Abs(y - (int)y);
-			Index(y, m_sy, out y0, out y1);
+			Index(y, m_sizeY, out y0, out y1);
 
-			for(int c = 0; c < m_c; c++)
+			for(int c = 0; c < m_channels; c++)
 			{
-				float v0 = m_data[(x0 + y0 * m_sx) * m_c + c] * (1.0f-fx) + m_data[(x1 + y0 * m_sx) * m_c + c] * fx;
-				float v1 = m_data[(x0 + y1 * m_sx) * m_c + c] * (1.0f-fx) + m_data[(x1 + y1 * m_sx) * m_c + c] * fx;
+				float v0 = m_data[(x0 + y0 * m_sizeX) * m_channels + c] * (1.0f-fx) + m_data[(x1 + y0 * m_sizeX) * m_channels + c] * fx;
+				float v1 = m_data[(x0 + y1 * m_sizeX) * m_channels + c] * (1.0f-fx) + m_data[(x1 + y1 * m_sizeX) * m_channels + c] * fx;
 
             	v[c] = v0 * (1.0f-fy) + v1 * fy;
 			}
@@ -176,28 +176,28 @@ namespace Ceto.Common.Containers.Interpolation
             //un-normalize cords
             if (HalfPixelOffset)
             {
-                x *= (float)m_sx;
-                y *= (float)m_sy;
+                x *= (float)m_sizeX;
+                y *= (float)m_sizeY;
 
                 x -= 0.5f;
                 y -= 0.5f;
             }
             else
             {
-                x *= (float)(m_sx - 1);
-                y *= (float)(m_sy - 1);
+                x *= (float)(m_sizeX - 1);
+                y *= (float)(m_sizeY - 1);
             }
 
             int x0, x1;
             float fx = Math.Abs(x - (int)x);
-            Index(x, m_sx, out x0, out x1);
+            Index(x, m_sizeX, out x0, out x1);
 
             int y0, y1;
             float fy = Math.Abs(y - (int)y);
-            Index(y, m_sy, out y0, out y1);
+            Index(y, m_sizeY, out y0, out y1);
 
-            float v0 = m_data[(x0 + y0 * m_sx) * m_c + c] * (1.0f - fx) + m_data[(x1 + y0 * m_sx) * m_c + c] * fx;
-            float v1 = m_data[(x0 + y1 * m_sx) * m_c + c] * (1.0f - fx) + m_data[(x1 + y1 * m_sx) * m_c + c] * fx;
+            float v0 = m_data[(x0 + y0 * m_sizeX) * m_channels + c] * (1.0f - fx) + m_data[(x1 + y0 * m_sizeX) * m_channels + c] * fx;
+            float v1 = m_data[(x0 + y1 * m_sizeX) * m_channels + c] * (1.0f - fx) + m_data[(x1 + y1 * m_sizeX) * m_channels + c] * fx;
 
             return v0 * (1.0f - fy) + v1 * fy;
             

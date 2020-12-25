@@ -80,8 +80,8 @@ namespace Ceto
 
         Vector4 m_offset;
 
-        public WaveSpectrumBufferGPU(int size, Shader fourierSdr, int numBuffers)
-		{
+        public WaveSpectrumBufferGPU(int size, Shader fourierSdr, int numBuffers) //OYM:  一个在GPU上使用FFT变换频谱的缓冲区。 产生的数据类型取决于所使用的初始化材料。
+        {
 
 			if(numBuffers < 1 || numBuffers > 4)
 				throw new InvalidOperationException("Number of buffers is " + numBuffers + " but must be between (inclusive) 1 and 4");
@@ -97,9 +97,9 @@ namespace Ceto
             m_tmpBuffer3 = new RenderBuffer[3];
             m_tmpBuffer4 = new RenderBuffer[4];
 
-            m_offset = new Vector4(1.0f + 0.5f / Size, 1.0f + 0.5f / Size, 0, 0);
+            m_offset = new Vector4(1.0f + 0.5f / Size, 1.0f + 0.5f / Size, 0, 0); //OYM:  偏移量...这个用来做啥的
 
-			for(int i = 0; i < numBuffers; i++)
+            for(int i = 0; i < numBuffers; i++)
 			{
 				m_buffers[i] = CreateBuffer(size);
 			}
@@ -118,8 +118,8 @@ namespace Ceto
         /// while the other is read from and then they swap.
         /// This is the read/write method (also know as ping/pong).
         /// </summary>
-		Buffer CreateBuffer(int size)
-		{
+		Buffer CreateBuffer(int size) //OYM:  双重读写
+        {
 
 			Buffer buffer = new Buffer();
 
@@ -234,13 +234,13 @@ namespace Ceto
 		public void UpdateEnabledData()
 		{
 
-			m_enabledData.Clear();
-            int count = m_buffers.Length;
+            m_enabledData.Clear(); //OYM:  清除list
+            int count = m_buffers.Length; //OYM:  本地创建的缓冲数量
             for (int i = 0; i < count; i++)
             {
 				if(!m_buffers[i].disabled)
-					m_enabledData.Add(m_buffers[i].data);
-			}
+                    m_enabledData.Add(m_buffers[i].data); //OYM:  更新已经打开的数据
+            }
 			
 		}
 

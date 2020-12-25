@@ -577,6 +577,7 @@ namespace Ceto
             if (data.clip != null)
             {
                 Shader.SetGlobalTexture("Ceto_Overlay_ClipMap", data.clip);
+                CetoTest.AddPicture(data.clip);
             }
             else
                 Shader.SetGlobalTexture("Ceto_Overlay_ClipMap", Texture2D.blackTexture);
@@ -733,7 +734,7 @@ namespace Ceto
 		void Blit(Vector4[] corners, Vector2 scale, Vector2 offset, RenderTexture des, Material mat, int pass)
 		{
 
-			Graphics.SetRenderTarget(des);
+            Graphics.SetRenderTarget(des);
 			
 			GL.PushMatrix();
 			GL.LoadOrtho();

@@ -20,24 +20,24 @@ namespace Ceto
         //Dont change these
 		public const int READ = 1;
 		public const int WRITE = 0;
-		
 
+        //OYM:  缓冲区
         /// <summary>
         /// Holds the actual buffer data.
         /// </summary>
-		public class Buffer
+        public class Buffer
 		{
             //Array to hold the read/write data
-			public IList<Vector4[]> data;
-            //The results from the FFT end up in here.
-			public Color[] results;
-            //When the FFT task finishes the results get written to the texture
-			public Texture2D map;
-			//Is this buffer disabled.
-			public bool disabled;
-			//Is the data double packed (two complex numbers in one vector4).
-			public bool doublePacked;
-		}
+            public IList<Vector4[]> data; //OYM:  需要读写的数据
+                                          //The results from the FFT end up in here.
+            public Color[] results; //OYM:  FFT返回的数据
+                                    //When the FFT task finishes the results get written to the texture
+            public Texture2D map;//OYM:  FFT数据写入的地方
+                                 //Is this buffer disabled.
+            public bool disabled;
+            //Is the data double packed (two complex numbers in one vector4).
+            public bool doublePacked; //OYM:  是否二次打包
+        }
 
         /// <summary>
         /// Has the data requested been created.
@@ -93,14 +93,14 @@ namespace Ceto
 
 			m_buffers = new Buffer[numBuffers];
 
-			m_fourier = new FourierCPU(size);
+            m_fourier = new FourierCPU(size); //OYM:  创建傅里叶CPU算法的基础
 
             m_fourierTasks = new List<FourierTask>(3); //OYM:  一脸懵逼
             m_fourierTasks.Add(null);
             m_fourierTasks.Add(null);
             m_fourierTasks.Add(null);
 
-            m_scheduler = scheduler; //OYM:  处理器
+            m_scheduler = scheduler; //OYM:  多线程任务处理
 
             for (int i = 0; i < numBuffers; i++) //OYM:  这个好像是个常数,总之就是给你三块缓存空间
             {
@@ -127,16 +127,16 @@ namespace Ceto
 
             buffer.results = new Color[size * size];//OYM:  这里面目前是空的
 
-            buffer.map = new Texture2D(size, size, TextureFormat.RGBAFloat, false, true);
-			buffer.map.wrapMode = TextureWrapMode.Repeat;
-			buffer.map.filterMode = FilterMode.Bilinear;
-			buffer.map.hideFlags = HideFlags.HideAndDontSave;
-            buffer.map.name = "Ceto Wave Spectrum CPU Buffer";
+            buffer.map = new Texture2D(size, size, TextureFormat.RGBAFloat, false, true); //OYM:  创建一个材质,用于返回FFT的结果
+            buffer.map.wrapMode = TextureWrapMode.Repeat; //OYM:  材质环绕的模式
+            buffer.map.filterMode = FilterMode.Bilinear; //OYM:  材质过滤模式
+            buffer.map.hideFlags = HideFlags.HideAndDontSave; //OYM:  材质可见模式
+            buffer.map.name = "Ceto Wave Spectrum CPU Buffer"; //OYM:  材质名字
 
-			buffer.map.SetPixels(buffer.results);
-			buffer.map.Apply();
+            buffer.map.SetPixels(buffer.results); //OYM:  转移FFT的数据
+            buffer.map.Apply();//OYM:  将SetPixel的数据从CPU转移到GPU
 
-			return buffer;
+            return buffer;
 
 		}
 

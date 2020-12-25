@@ -21,17 +21,17 @@ namespace Ceto
             int GRIDS = QueryDisplacements.GRIDS;//OYM:  4
             int CHANNELS = QueryDisplacements.CHANNELS;//OYM:  3
 
-            m_displacements = new List<InterpolatedArray2f[]>(2); //OYM:  差值数组
+            m_displacements = new List<InterpolatedArray2f[]>(2); //OYM:  差值数组,注释上说,可以用浮点数对数组进行采样,将使用bilinear过滤执行 
 
-            m_displacements.Add(new InterpolatedArray2f[GRIDS]);//OYM:  你直接写后面它不好吗
+            m_displacements.Add(new InterpolatedArray2f[GRIDS]);//OYM:  注意这里是添加一个新建的数组,容量为4
             m_displacements.Add( new InterpolatedArray2f[GRIDS] );
 
 			for (int i = 0; i < GRIDS; i++)
 			{
-                m_displacements[0][i] = new InterpolatedArray2f(size, size, CHANNELS, true); //OYM:  2*4一共八个,都是常数
-                m_displacements[1][i] = new InterpolatedArray2f(size, size, CHANNELS, true); //OYM:  
+				//OYM:  2*4一共八个
+				m_displacements[0][i] = new InterpolatedArray2f(size, size, CHANNELS, true); 
+                m_displacements[1][i] = new InterpolatedArray2f(size, size, CHANNELS, true); 
             }
-
 		}
 
 		protected override void Initilize(WaveSpectrumCondition condition, float time)

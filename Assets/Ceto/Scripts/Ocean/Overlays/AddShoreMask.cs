@@ -11,6 +11,7 @@ namespace Ceto
     /// Ideal for shoreline effects.
     /// </summary>
     [AddComponentMenu("Ceto/Overlays/AddShoreMask")]
+
     public class AddShoreMask : AddWaveOverlayBase
     {
 

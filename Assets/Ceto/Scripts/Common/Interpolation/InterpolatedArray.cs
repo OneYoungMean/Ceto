@@ -26,7 +26,7 @@ namespace Ceto.Common.Containers.Interpolation
         public InterpolatedArray(bool wrap) //OYM:  默认是true.你就当这玩意是true就行
         {
             m_wrap = wrap;
-            HalfPixelOffset = true; //OYM:  
+            HalfPixelOffset = true; //OYM:  半偏移?这是啥
         }
 
 		/// <summary>

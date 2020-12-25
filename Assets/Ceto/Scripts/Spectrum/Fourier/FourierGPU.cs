@@ -41,12 +41,12 @@ namespace Ceto
         /// <summary>
         /// Arrays to hold the buffers to blit into for MRT.
         /// </summary>
-        RenderBuffer[] m_pass0RT2, m_pass1RT2;
+        RenderBuffer[] m_pass0RT2, m_pass1RT2;//OYM:  作者说这是MRT缓冲区....那是啥
         RenderBuffer[] m_pass0RT3, m_pass1RT3;
         RenderBuffer[] m_pass0RT4, m_pass1RT4;
-		
-		public FourierGPU(int size, Shader sdr)
-		{
+
+        public FourierGPU(int size, Shader sdr) //OYM:  GPU版本的FFT,啊我死了
+        {
 
 			if (!Mathf.IsPowerOfTwo(size))
 				throw new ArgumentException("Fourier grid size must be pow2 number");
@@ -122,10 +122,10 @@ namespace Ceto
 			{
 				int nBlocks = (int)Mathf.Pow(2, m_passes - 1 - i);
 				int nHInputs = (int)Mathf.Pow(2, i);
-				
-				m_butterflyLookupTable[i] = Make1DTex(i);
-				
-				for (int j = 0; j < nBlocks; j++)
+
+                m_butterflyLookupTable[i] = Make1DTex(i); //OYM:  在这里计算的话,其实就是一块材质,而不是一个数组了
+
+                for (int j = 0; j < nBlocks; j++)
 				{
 					for (int k = 0; k < nHInputs; k++)
 					{
@@ -147,10 +147,10 @@ namespace Ceto
 
 						float wr = Mathf.Cos(2.0f * Mathf.PI * (float)(k * nBlocks) / S);
 						float wi = Mathf.Sin(2.0f * Mathf.PI * (float)(k * nBlocks) / S);
-						
-						m_butterflyLookupTable[i].SetPixel(i1, 0, new Color((float)j1/S1, (float)j2/S1, wr, wi));
-						
-						m_butterflyLookupTable[i].SetPixel(i2, 0, new Color((float)j1/S1, (float)j2/S1, -wr, -wi));
+
+                        m_butterflyLookupTable[i].SetPixel(i1, 0, new Color((float)j1 / S1, (float)j2 / S1, wr, wi)); //OYM:  之后看懂FFT再来看吧
+
+                        m_butterflyLookupTable[i].SetPixel(i2, 0, new Color((float)j1/S1, (float)j2/S1, -wr, -wi));
 						
 					}
 				}
