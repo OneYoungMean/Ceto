@@ -1,6 +1,6 @@
 // Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
 
-#ifndef CETO_SURFACESHADER_BODY_INCLUDED
+#ifndef CETO_SURFACESHADER_BODY_INCLUDED //OYM： if no define
 #define CETO_SURFACESHADER_BODY_INCLUDED
 
 struct appdata_ceto
@@ -22,9 +22,11 @@ struct Input
 void OceanVert(inout appdata_ceto v, out Input OUT) 
 {
 	
-	UNITY_INITIALIZE_OUTPUT(Input, OUT);
+	UNITY_INITIALIZE_OUTPUT(Input, OUT); //OYM： 将给定类型的变量名称初始化为零
 	
-	float4 uv = float4(v.vertex.xy, v.texcoord.xy);
+	float4 uv = float4(v.vertex.xy, v.texcoord.xy); //OYM： x,y坐标与u,v坐标
+
+
 
 	float4 oceanPos;
 	float3 displacement;

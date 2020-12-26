@@ -512,7 +512,7 @@ void OceanNormalAndFoam(float4 uv, float4 st, float3 worldPos, out half3 norm, o
 	unmaskedNorm = norm;
 
 	half normMask = 1.0 - saturate(onorm.w);
-	fixed foamMask = 1.0 - saturate(ofoam.w);
+	fixed foamMask = 1.0 - saturate(ofoam.w);//OYM£º saturate=clamp01
 	
 	//Apply the overlay mask and then add the overlay normals.
 	norm.xz *= normMask;

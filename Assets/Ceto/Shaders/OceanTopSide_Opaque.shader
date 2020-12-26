@@ -18,7 +18,7 @@ Shader "Ceto/OceanTopSide_Opaque"
 		cull [_CullFace]
 		
 		CGPROGRAM
-		#pragma surface OceanSurfTop OceanBRDF noforwardadd nolightmap
+		//#pragma surface OceanSurfTop OceanBRDF noforwardadd nolightmap
 		//#pragma surface OceanSurfTop OceanBRDF nolightmap fullforwardshadows
 		#pragma vertex OceanVert
 		#pragma target 3.0
