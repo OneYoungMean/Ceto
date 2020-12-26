@@ -10,7 +10,7 @@ Shader "Ceto/OceanTopSide_Opaque"
 		Tags { "OceanMask"="Ceto_ProjectedGrid_Top" "RenderType"="Ceto_ProjectedGrid_Top" "IgnoreProjector"="True" "Queue"="AlphaTest+50" }
 		LOD 200
 		
-		GrabPass { "Ceto_RefractionGrab" }
+		GrabPass { "Ceto_RefractionGrab" } //OYM： 从这里开始
 		
 		zwrite on
 		//cull back

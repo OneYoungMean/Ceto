@@ -572,7 +572,6 @@ namespace Ceto
             if (data.foam != null)
             {
                 Shader.SetGlobalTexture("Ceto_Overlay_FoamMap", data.foam);
-                CetoTest.AddPicture(data.foam);
             }
 
             else
@@ -739,11 +738,12 @@ namespace Ceto
 		{
 
             Graphics.SetRenderTarget(des);
-			
-			GL.PushMatrix();
-			GL.LoadOrtho();
-			
-			mat.SetPass(pass);
+
+            GL.PushMatrix(); //OYM:  将模型，视图和投影矩阵保存到矩阵堆栈的顶部,以方便更改
+            GL.LoadOrtho(); //OYM:  加载正交投影,等同于            GL.LoadProjectionMatrix（Matrix4x4.Ortho（0，1，0，1，-1，100）);
+
+
+            mat.SetPass(pass);
 
 			GL.Begin(GL.QUADS);
 
