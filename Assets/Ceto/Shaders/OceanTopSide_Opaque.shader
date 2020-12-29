@@ -18,7 +18,7 @@ Shader "Ceto/OceanTopSide_Opaque"
 		cull [_CullFace]
 		
 		CGPROGRAM
-		//#pragma surface OceanSurfTop OceanBRDF noforwardadd nolightmap
+		#pragma surface OceanSurfTop OceanBRDF noforwardadd nolightmap
 		//#pragma surface OceanSurfTop OceanBRDF nolightmap fullforwardshadows
 		#pragma vertex OceanVert
 		#pragma target 3.0
@@ -28,7 +28,7 @@ Shader "Ceto/OceanTopSide_Opaque"
 		#pragma multi_compile __ CETO_USE_OCEAN_DEPTHS_BUFFER
 		#pragma multi_compile __ CETO_USE_4_SPECTRUM_GRIDS
 		#pragma multi_compile __ CETO_STERO_CAMERA
-		
+		#pragma enable_d3d11_debug_symbols //OYM£∫ ∑¿÷π”≈ªØ¡À
 		//#define CETO_REFLECTION_ON
 		//#define CETO_UNDERWATER_ON
 		//#define CETO_USE_OCEAN_DEPTHS_BUFFER
@@ -89,12 +89,6 @@ Shader "Ceto/OceanTopSide_Opaque"
 	
 	FallBack Off
 }
-
-
-
-
-
-
 
 
 

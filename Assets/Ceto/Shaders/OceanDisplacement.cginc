@@ -8,20 +8,20 @@
 * Also adds a border around the mesh to prevent horizontal 
 * displacement from pulling the mesh from the screen.
 */
-float4 OceanPos(float4 uv)
+float4 OceanPos(float4 uv) //OYM： 通过对平截头体的投影角点进行插值来找到投影平面上的世界位置.uv是0-1范围内的屏幕空间，并在网格周围添加边框以防止水平位移将网格从屏幕上拉出。
 {
-
+	//OYM： 这个地方太抽象,就不分析了
 	//Interpolation must use a uv in range of 0-1
 	//Should be in 0-1 but saturate just in case.
-	uv.xy = saturate(uv.xy);
+	uv.xy = saturate(uv.xy);//OYM： 限制到0-1
 
 	//Interpolate between frustums world space projection points.
-	float4 p = lerp(lerp(Ceto_Interpolation[0], Ceto_Interpolation[1], uv.x), lerp(Ceto_Interpolation[3], Ceto_Interpolation[2],uv.x), uv.y);
-	p = p / p.w;
+	float4 p = lerp(lerp(Ceto_Interpolation[0], Ceto_Interpolation[1], uv.x), lerp(Ceto_Interpolation[3], Ceto_Interpolation[2], uv.x), uv.y);
+	p = p / p.w; //OYM： 归一化
 	
 	//Find the world position of the screens center position.
 	float4 c = lerp(lerp(Ceto_Interpolation[0], Ceto_Interpolation[1], 0.5), lerp(Ceto_Interpolation[3], Ceto_Interpolation[2],0.5), 0.5);
-	c = c / c.w;
+	c = c / c.w; //OYM： 
 	
 	//Find the direction this position is relative to the meshes center.
 	float3 worldDir = normalize(p.xyz-c.xyz);
@@ -393,10 +393,10 @@ fixed SampleFoam(float2 uv)
 * Find the ocean position and the displacement for the screen uv.
 * The uv is in screen space in 0-1 range.
 */
-void OceanPositionAndDisplacement(float4 uv, out float4 oceanPos, out float3 displacement)
+void OceanPositionAndDisplacement(float4 uv, out float4 oceanPos, out float3 displacement) //OYM： 找到UV的位置并且返回在屏幕上的UV ,范围必须在0-1范围内
 {
 
-	oceanPos = OceanPos(uv);
+	oceanPos = OceanPos(uv); //OYM： 
 	
 	displacement = float3(0,0,0);
 	

@@ -20,7 +20,7 @@ Shader "Ceto/OceanTopSide_Transparent"
 		Blend SrcAlpha OneMinusSrcAlpha
 		
 		CGPROGRAM
-		#pragma surface OceanSurfTop OceanBRDF noforwardadd nolightmap keepalpha
+		#pragma surface OceanSurfTop OceanBRDF noforwardadd nolightmap keepalpha //OYM：用OceanSurfTop的方法,用LightingOceanBRDF的自定义光照通道, 只支持一次光照,没有光照图,保持alpha通道
 		#pragma vertex OceanVert
 		#pragma target 3.0
 		
@@ -56,6 +56,7 @@ Shader "Ceto/OceanTopSide_Transparent"
 
 		ENDCG
 		
+		//OYM： 这个pass好像...没人用?
 		Pass 
 		{
 			Name "ShadowCaster"

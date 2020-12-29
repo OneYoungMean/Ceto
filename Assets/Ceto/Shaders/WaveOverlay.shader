@@ -132,7 +132,7 @@
 		return float4(norm, mask);
 
 	}
-
+		/*
 		float4 fragWaveOverlayFoam(v2f IN) : COLOR
 	{
 
@@ -146,6 +146,8 @@
 		return float4(foam.xx * Ceto_TextureFoam, 0, mask);
 
 	}
+	*/
+
 
 		float4 fragWaveOverlayClip(v2f IN) : COLOR
 	{

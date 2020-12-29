@@ -1,6 +1,7 @@
 #ifndef CETO_OCEAN_BRDF_INCLUDED
 #define CETO_OCEAN_BRDF_INCLUDED
 
+
 struct SurfaceOutputOcean 
 {
     fixed3 Albedo;
@@ -179,8 +180,8 @@ inline fixed4 OceanBRDFLight(SurfaceOutputOcean s, half3 viewDir, UnityLight lig
 	return c;
 
 }
-
-inline fixed4 LightingOceanBRDF(SurfaceOutputOcean s, half3 viewDir, UnityGI gi)
+//OYM：这里有一套我不太清楚的运作格式
+inline fixed4 LightingOceanBRDF(SurfaceOutputOcean s, half3 viewDir, UnityGI gi)  
 {
 
 	//return fixed4(s.Albedo,1);
@@ -215,6 +216,4 @@ inline void LightingOceanBRDF_GI (SurfaceOutputOcean s, UnityGIInput data, inout
 }
 
 #endif
-
-
 

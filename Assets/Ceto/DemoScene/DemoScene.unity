@@ -270,12 +270,12 @@ MonoBehaviour:
   heightAlpha: 1
   normalMask: {fileID: 0}
   normalAlpha: 1
-  edgeFoam: {fileID: 0}
+  edgeFoam: {fileID: 2800000, guid: 2f0448e6e40e0f94bbb4f9093df47981, type: 3}
   edgeFoamAlpha: 10
   textureFoam: 0
   foamMask: {fileID: 0}
   foamMaskAlpha: 1
-  clipMask: {fileID: 2800000, guid: abbf171195569422483b78e720596e46, type: 3}
+  clipMask: {fileID: 0}
   width: 50
   height: 50
   offset: {x: 0, y: 0, z: 0}
@@ -673,7 +673,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1425156105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -733,7 +733,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1497117092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -902,7 +902,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1520555816
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -962,7 +962,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1703835472
 MonoBehaviour:
   m_ObjectHideFlags: 0
