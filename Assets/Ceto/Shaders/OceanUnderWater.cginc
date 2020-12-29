@@ -16,10 +16,10 @@ fixed FoamAmount(float3 worldPos, fixed4 foam)
 	fixed foamTexture = 0.0;
 
 	#ifndef CETO_DISABLE_FOAM_TEXTURE
-   		foamTexture += tex2D(Ceto_FoamTexture0, (worldPos.xz + Ceto_FoamTextureScale0.z) * Ceto_FoamTextureScale0.xy).a * 0.5;
-		foamTexture += tex2D(Ceto_FoamTexture1, (worldPos.xz + Ceto_FoamTextureScale1.z) * Ceto_FoamTextureScale1.xy).a * 0.5;
+   		//foamTexture += tex2D(Ceto_FoamTexture0, (worldPos.xz + Ceto_FoamTextureScale0.z) * Ceto_FoamTextureScale0.xy).a * 0.5;
+		//foamTexture += tex2D(Ceto_FoamTexture1, (worldPos.xz + Ceto_FoamTextureScale1.z) * Ceto_FoamTextureScale1.xy).a * 0.5;
 	#else
-		foamTexture = 1.0;
+		foamTexture = 2.0;
 	#endif
 
 	//Apply texture to the wave foam if that option is enabled.
@@ -68,10 +68,10 @@ fixed3 AddFoamColor(float4 uv, fixed foamAmount, fixed3 oceanCol)
 	//apply the absorption coefficient to the foam based on the foam strength.
 	//This will fade the foam add make it look like it has some depth and
 	//since it uses the abs cof the color should match the water.
-	fixed3 foamCol = tex2D(Ceto_Overlay_FoamTexture, uv).rgb;
+	fixed4 foamCol = tex2D(Ceto_Overlay_FoamTexture, uv);
 	 //OYM： 这里有这个图吗
 	//TODO - find better way than lerp to blend.
-	return lerp(oceanCol, foamCol, foamAmount);
+	return  lerp(oceanCol, foamCol, foamCol.a);
 }
 
 
