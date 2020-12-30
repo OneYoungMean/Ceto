@@ -132,8 +132,8 @@
 		return float4(norm, mask);
 
 	}
-		/*
-		float4 fragWaveOverlayFoam(v2f IN) : COLOR
+		
+	float4 fragWaveOverlayFoam(v2f IN) : COLOR
 	{
 
 		float foam = tex2D(Ceto_Overlay_Foam, IN.uvtex).a;
@@ -146,16 +146,8 @@
 		return float4(foam.xx * Ceto_TextureFoam, 0, mask);
 
 	}
-	*/
+	
 
-
-		float4 fragWaveOverlayClip(v2f IN) : COLOR
-	{
-
-		float4 cp = tex2D(Ceto_Overlay_Clip, IN.uvtex);
-
-		return cp.a;
-	}
 
 		ENDCG
 

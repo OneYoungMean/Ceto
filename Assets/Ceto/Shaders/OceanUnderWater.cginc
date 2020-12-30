@@ -35,6 +35,7 @@ fixed FoamAmount(float3 worldPos, fixed4 foam)
 * Applies the foam to the ocean color.
 * Spectrum foam in x, overlay foam in y.
 */
+
 fixed3 AddFoamColor(fixed foamAmount, fixed3 oceanCol)
 {
 
@@ -46,34 +47,6 @@ fixed3 AddFoamColor(fixed foamAmount, fixed3 oceanCol)
 	//TODO - find better way than lerp to blend.
 	return lerp(oceanCol, foamCol, foamAmount);
 }
-/*
-fixed3 AddFoamColor(fixed foamAmount, fixed3 oceanCol)
-{
-
-	//apply the absorption coefficient to the foam based on the foam strength.
-	//This will fade the foam add make it look like it has some depth and
-	//since it uses the abs cof the color should match the water.
-	fixed3 foamCol = Ceto_FoamTint * foamAmount * exp(-Ceto_AbsCof.rgb * (1.0 - foamAmount) * 1.0);
-
-	//TODO - find better way than lerp to blend.
-	return lerp(oceanCol, foamCol, foamAmount);
-}
-*/
-
-sampler2D Ceto_Overlay_FoamTexture;
-
-fixed3 AddFoamColor(float4 uv, fixed foamAmount, fixed3 oceanCol)
-{
-
-	//apply the absorption coefficient to the foam based on the foam strength.
-	//This will fade the foam add make it look like it has some depth and
-	//since it uses the abs cof the color should match the water.
-	fixed3 foamCol = tex2D(Ceto_Overlay_FoamTexture, uv).rgb;
-	 //OYM： 这里有这个图吗
-	//TODO - find better way than lerp to blend.
-	return lerp(oceanCol, foamCol, foamAmount);
-}
-
 
 /*
 * Calculate a subsurface scatter color based on the view, normal and sun dir.

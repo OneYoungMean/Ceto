@@ -181,7 +181,7 @@ void OceanSurfUnder(Input IN, inout SurfaceOutputOcean o)
 	
 	col += sky * (1.0-fresnel);
 	
-	col = AddFoamColor(uv,foamAmount, col);
+	col = AddFoamColor(foamAmount, col);
 
 	o.Albedo = col;
 	o.Normal = TangentSpaceNormal(norm);
