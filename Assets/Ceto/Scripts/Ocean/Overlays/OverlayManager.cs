@@ -571,7 +571,6 @@ namespace Ceto
 
             if (data.foam != null)
             {
-                //Shader.SetGlobalTexture("Ceto_Overlay_FoamMap", data.foam);
                 Shader.SetGlobalTexture("Ceto_Overlay_FoamMap", data.foam);
                 Shader.SetGlobalTexture("Ceto_Overlay_FoamTexture", data.foam);
                 //CetoTest.AddPicture(data.foam);

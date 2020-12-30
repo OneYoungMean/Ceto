@@ -148,11 +148,7 @@
 	}
 	*/
 
-		float4 fragWaveOverlayFoam(v2f IN) : COLOR
-	{
-		return tex2D(Ceto_Overlay_Foam, IN.uvtex);
 
-	}
 		float4 fragWaveOverlayClip(v2f IN) : COLOR
 	{
 
